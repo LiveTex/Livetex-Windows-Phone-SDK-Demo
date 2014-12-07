@@ -1,0 +1,37 @@
+﻿<UserControl x:Class="LiveTex.SampleApp.Controls.ChatMessageControl"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    FontFamily="{StaticResource PhoneFontFamilyNormal}"
+    FontSize="{StaticResource PhoneFontSizeNormal}"
+    Foreground="{StaticResource PhoneForegroundBrush}"
+    d:DesignHeight="480" d:DesignWidth="480">
+
+    <Grid x:Name="LayoutRoot">
+        <Grid x:Name="viewMessage" Margin="{Binding Converter={StaticResource MessageDirectionToMarginConverter}}">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="12" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="12" />
+            </Grid.RowDefinitions>
+
+            <Polygon Grid.Row="0" Fill="{StaticResource PhoneAccentBrush}" Width="12" Height="12" Points="0,0 12,0 12,12" StrokeThickness="0" RenderTransformOrigin="0.5, 0.5" HorizontalAlignment="Left" Margin="24,0,24,-1" Visibility="{Binding IsIncomingMessage, Converter={StaticResource BoolToVisibilityConverter}}">
+                <Polygon.RenderTransform>
+                    <CompositeTransform ScaleX="-1" ScaleY="-1"/>
+                </Polygon.RenderTransform>
+            </Polygon>
+
+            <Border Grid.Row="1" Background="{StaticResource PhoneAccentBrush}" Padding="0,12" Margin="12,0,12,0">
+                <StackPanel>
+                    <TextBlock Text="{Binding Message}" Style="{StaticResource PhoneTextNormalStyle}"/>
+                    <HyperlinkButton x:Name="viewUri" Content="{Binding Uri}" Visibility="{Binding Uri, Converter={StaticResource NullToVisibilityConverter}}" Click="UriOnClick" />
+                    <TextBlock Text="{Binding Status}" Style="{StaticResource PhoneTextSubtleStyle}" HorizontalAlignment="Right" Visibility="{Binding Status, Converter={StaticResource NullToVisibilityConverter}}" />
+                </StackPanel>
+            </Border>
+
+            <Polygon Grid.Row="2" Fill="{StaticResource PhoneAccentBrush}" Width="12" Height="12" Points="0,0 12,0 12,12" StrokeThickness="0" RenderTransformOrigin="0.5, 0.5" HorizontalAlignment="Right" Margin="24,-1,24, 0" Visibility="{Binding IsIncomingMessage, Converter={StaticResource InvertedBoolToVisibilityConverter}}"/>
+        </Grid>
+    </Grid>
+</UserControl>
