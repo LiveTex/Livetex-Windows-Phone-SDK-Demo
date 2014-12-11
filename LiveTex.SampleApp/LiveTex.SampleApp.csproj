@@ -160,6 +160,8 @@
     </Page>
   </ItemGroup>
   <ItemGroup>
+    <None Include="LICENSE" />
+    <None Include="NOTICE" />
     <None Include="packages.config" />
     <None Include="Properties\AppManifest.xml" />
     <None Include="Properties\WMAppManifest.xml">
@@ -202,11 +204,13 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-    <Reference Include="LiveTex.SDK">
-      <HintPath>..\Lib\SDK\LiveTex.SDK.dll</HintPath>
+    <Reference Include="LiveTex.SDK, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\LiveTex.SDK.1.0.2.0\lib\windowsphone8\LiveTex.SDK.dll</HintPath>
     </Reference>
-    <Reference Include="LiveTex.Thrift">
-      <HintPath>..\Lib\SDK\LiveTex.Thrift.dll</HintPath>
+    <Reference Include="LiveTex.Thrift, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\LiveTex.SDK.1.0.2.0\lib\windowsphone8\LiveTex.Thrift.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Phone.Controls.Toolkit">
       <HintPath>..\packages\WPtoolkit.4.2013.08.16\lib\wp8\Microsoft.Phone.Controls.Toolkit.dll</HintPath>
