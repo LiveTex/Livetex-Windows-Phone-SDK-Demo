@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using LiveTex.SampleApp.Wrappers;
@@ -54,6 +55,13 @@ namespace LiveTex.SampleApp.ViewModel
 					SendTypingMessage();
 				}
 			}
+		}
+
+		private bool _conversationActive;
+		public bool ConversationActive
+		{
+			get { return _conversationActive; }
+			private set { SetValue(ref _conversationActive, value); }
 		}
 
 		#endregion
@@ -183,32 +191,34 @@ namespace LiveTex.SampleApp.ViewModel
 			}
 		}
 
-		private bool _typingMessageHasBeenSent;
+		private int _typingMessageInProgress;
+
 		private async Task SendTypingMessage()
 		{
-			if (_typingMessageHasBeenSent)
+			var current = Interlocked.Exchange(ref _typingMessageInProgress, 1);
+			if(current == 1)
 			{
 				return;
 			}
 
-			_typingMessageHasBeenSent = true;
+			await Task.Delay(1000);
 
-			var message = MessageText;
-			if (string.IsNullOrWhiteSpace(message))
+			if(Volatile.Read(ref _typingMessageInProgress) != 1)
 			{
-				_typingMessageHasBeenSent = false;
 				return;
 			}
 
-			await WrapRequest(() => Client.TypingMessageAsync(new TypingMessage { Text = message }), false);
+			await WrapRequest(() => Client.TypingMessageAsync(new TypingMessage { Text = MessageText }), false);
+			
+			Volatile.Write(ref _typingMessageInProgress, 0);
 		}
 
 		private async Task SendMessage()
 		{
 			var message = MessageText;
-			SyncExecute(() => MessageText = "");
+			await SyncExecute(() => MessageText = "");
 
-			_typingMessageHasBeenSent = false;
+			Volatile.Write(ref _typingMessageInProgress, 0);
 
 			if (string.IsNullOrWhiteSpace(message))
 			{
@@ -265,6 +275,8 @@ namespace LiveTex.SampleApp.ViewModel
 
 		private async Task HandleDialogState(DialogState dialogState)
 		{
+			ConversationActive = dialogState.State == DialogStates.ConversationActive;
+
 			if(dialogState.Employee == null)
 			{
 				EmployeeAvatar = null;
@@ -334,7 +346,11 @@ namespace LiveTex.SampleApp.ViewModel
 			SyncExecute(() =>
 			{
 				HideTypingMessage();
-				Messages.Add(new ChatMessageWrapper(message));
+
+				var wrapper = new ChatMessageWrapper(message);
+				Messages.Add(wrapper);
+
+				Task.Delay(5000).ContinueWith(t => SyncExecute(() => Messages.Remove(wrapper)));
 			});
 		}
 

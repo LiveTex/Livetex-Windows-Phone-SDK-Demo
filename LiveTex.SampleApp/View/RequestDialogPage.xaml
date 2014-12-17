@@ -42,18 +42,28 @@
 
                 <TextBlock Text="Департамент" Style="{StaticResource PhoneTextSubtleStyle}" />
                 <toolkit:ListPicker ItemsSource="{Binding Departments}" SelectedItem="{Binding Department, Mode=TwoWay}">
+                    <toolkit:ListPicker.FullModeItemTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding Converter={StaticResource ListItemWrapperConverter}}" Style="{StaticResource PhoneTextTitle2Style}" Margin="12"/>
+                        </DataTemplate>
+                    </toolkit:ListPicker.FullModeItemTemplate>
                     <toolkit:ListPicker.ItemTemplate>
                         <DataTemplate>
-                            <TextBlock Text="{Binding Converter={StaticResource ListItemWrapperConverter}}"></TextBlock>
+                            <TextBlock Text="{Binding Converter={StaticResource ListItemWrapperConverter}}"/>
                         </DataTemplate>
                     </toolkit:ListPicker.ItemTemplate>
                 </toolkit:ListPicker>
 
                 <TextBlock Text="Оператор" Style="{StaticResource PhoneTextSubtleStyle}" />
                 <toolkit:ListPicker ItemsSource="{Binding Employees}" SelectedItem="{Binding Employee, Mode=TwoWay}">
-                   <toolkit:ListPicker.ItemTemplate>
+                    <toolkit:ListPicker.FullModeItemTemplate>
                         <DataTemplate>
-                            <TextBlock Text="{Binding Converter={StaticResource ListItemWrapperConverter}}"></TextBlock>
+                            <TextBlock Text="{Binding Converter={StaticResource ListItemWrapperConverter}}" Style="{StaticResource PhoneTextTitle2Style}" Margin="12"/>
+                        </DataTemplate>
+                    </toolkit:ListPicker.FullModeItemTemplate>
+                    <toolkit:ListPicker.ItemTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding Converter={StaticResource ListItemWrapperConverter}}"/>
                         </DataTemplate>
                     </toolkit:ListPicker.ItemTemplate>
                 </toolkit:ListPicker>

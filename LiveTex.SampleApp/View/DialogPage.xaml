@@ -113,7 +113,7 @@
                     <RowDefinition Height="Auto" />
                 </Grid.RowDefinitions>
 
-                <toolkit:PhoneTextBox Grid.Row="0" Grid.Column="1" MaxHeight="186" x:Name="viewMessageText" Margin="0, 0, 0, -12" AcceptsReturn="True" KeyDown="ViewMessageTextKeyDown" InputScope="Chat" Text="{Binding MessageText, Mode=TwoWay}" helpers:TextBoxHelper.UpdateSourceOnTextChanged="true" />
+                <toolkit:PhoneTextBox Grid.Row="0" Grid.Column="1" MaxHeight="186" x:Name="viewMessageText" Margin="0, 0, 0, -12" AcceptsReturn="True" KeyDown="ViewMessageTextKeyDown" InputScope="Chat" Text="{Binding MessageText, Mode=TwoWay}" helpers:TextBoxHelper.UpdateSourceOnTextChanged="true" IsEnabled="{Binding ConversationActive}" />
                 <Polygon Grid.Row="1" Grid.Column="1" Fill="{StaticResource PhoneTextBoxBrush}" Width="12" Height="24" Points="0,0 12,0 12,12" StrokeThickness="0" RenderTransformOrigin="0.5, 0.5" HorizontalAlignment="Right" Margin="0,-1,24,12"/>
             </Grid>
         </Grid>

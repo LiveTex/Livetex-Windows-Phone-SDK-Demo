@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Specialized;
-using System.Threading.Tasks;
 using System.Windows.Input;
 using System.Windows.Navigation;
 using LiveTex.SampleApp.ViewModel;
@@ -49,7 +48,7 @@ namespace LiveTex.SampleApp
 		
 		private void SendMessageClick(object sender, EventArgs e)
 		{
-			ViewModel.SendMessageCommand.Execute(null);
+			SendMessageAndHideKeyboard();
 		}
 
 		private void ViewMessageTextKeyDown(object sender, KeyEventArgs e)
@@ -57,11 +56,16 @@ namespace LiveTex.SampleApp
 			if (e.Key == Key.Enter)
 			{
 				e.Handled = true;
-				ViewModel.SendMessageCommand.Execute(null);
-
-				// Hide keyboard
-				Focus();
+				SendMessageAndHideKeyboard();
 			}
+		}
+
+		private void SendMessageAndHideKeyboard()
+		{
+			ViewModel.SendMessageCommand.Execute(null);
+
+			// Hide keyboard
+			Focus();
 		}
 
 		private void AbuseClick(object sender, EventArgs e)
