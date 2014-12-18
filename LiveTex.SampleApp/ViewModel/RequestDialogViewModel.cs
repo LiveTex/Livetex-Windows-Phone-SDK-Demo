@@ -166,12 +166,10 @@ namespace LiveTex.SampleApp.ViewModel
 
 		private async Task RequestDialog()
 		{
-			if (!string.IsNullOrWhiteSpace(UserName))
+			var attributes = new DialogAttributes
 			{
-				await WrapRequest(() => Client.SetVisitorNameAsync(UserName));
-			}
-
-			var attributes = new DialogAttributes();
+				Hidden = new Dictionary<string, string> { { "platform", "win"} }
+			};
 
 			if (!string.IsNullOrWhiteSpace(UserAge))
 			{
@@ -185,6 +183,18 @@ namespace LiveTex.SampleApp.ViewModel
 				}
 
 				attributes.Visible = new Dictionary<string, string> { { "Возраст", age.ToString(CultureInfo.InvariantCulture) } };
+			}
+
+			if (!string.IsNullOrWhiteSpace(UserName))
+			{
+				await WrapRequest(() => Client.SetVisitorNameAsync(UserName));
+
+				if(attributes.Visible == null)
+				{
+					attributes.Visible = new Dictionary<string, string>();
+				}
+
+				attributes.Visible["Имя пользователя"] = UserName;
 			}
 
 			var departmentID = Department == null || Department.SourceObject == null
