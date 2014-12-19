@@ -91,7 +91,7 @@ namespace LiveTex.SampleApp.ViewModel
 
 			try
 			{
-				departments = await Client.GetDepartmentsAsync("1");
+				departments = await Client.GetDepartmentsAsync("online");
 			}
 			catch (AggregateException ex)
 			{
@@ -123,7 +123,7 @@ namespace LiveTex.SampleApp.ViewModel
 			try
 			{
 				emploees = string.IsNullOrWhiteSpace(departmentId)
-					? await Client.GetEmployeesAsync("1")
+					? await Client.GetEmployeesAsync("online")
 					: await Client.GetDepartmentEmployeesAsync(departmentId);
 			}
 			catch (AggregateException ex)
