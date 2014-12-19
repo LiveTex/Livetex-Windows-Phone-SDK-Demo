@@ -1,4 +1,5 @@
-﻿using System.Windows.Navigation;
+﻿using System;
+using System.Windows.Navigation;
 using LiveTex.SampleApp.ViewModel;
 using Microsoft.Phone.Controls;
 
@@ -23,6 +24,11 @@ namespace LiveTex.SampleApp
 			base.OnNavigatedTo(e);
 
 			ViewModel.NavigatedTo();
+		}
+
+		private void RemoveTokenClick(object sender, EventArgs e)
+		{
+			ViewModel.RemoveTokenCommand.Execute(null);
 		}
 	}
 }

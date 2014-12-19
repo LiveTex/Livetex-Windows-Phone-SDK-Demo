@@ -45,6 +45,20 @@ namespace LiveTex.SampleApp.ViewModel
 			set { SetValue(ref _authUri, value); }
 		}
 
+		private DelegateCommand _removeTokenCommand;
+		public DelegateCommand RemoveTokenCommand
+		{
+			get
+			{
+				if (_removeTokenCommand == null)
+				{
+					_removeTokenCommand = new DelegateCommand(LiveTexClient.RemoveToken);
+				}
+
+				return _removeTokenCommand;
+			}
+		}
+
 		private DelegateCommand _initializeClientCommand;
 		public DelegateCommand InitializeClientCommand
 		{
@@ -76,6 +90,13 @@ namespace LiveTex.SampleApp.ViewModel
 					if (string.IsNullOrWhiteSpace(AuthUri))
 					{
 						throw new Exception("Authentication Uri не задан");
+					}
+
+					if(!Equals(Storage.GetValue<string>(cKeyKey), Key)
+						|| !Equals(Storage.GetValue<string>(cAppIDKey), AppID)
+						|| !Equals(Storage.GetValue<string>(cAuthUriKey), AuthUri))
+					{
+						LiveTexClient.RemoveToken();
 					}
 
 					Storage.SetValue(cKeyKey, Key);

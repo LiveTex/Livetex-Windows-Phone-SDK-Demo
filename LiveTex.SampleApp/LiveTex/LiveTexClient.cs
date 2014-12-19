@@ -29,6 +29,11 @@ namespace LiveTex.SampleApp.LiveTex
 			}
 		}
 
+		public static void RemoveToken()
+		{
+			Token = null;
+		}
+
 		private static string Token
 		{
 			get

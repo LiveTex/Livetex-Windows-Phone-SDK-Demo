@@ -13,6 +13,14 @@
     SupportedOrientations="Portrait" Orientation="Portrait"
     shell:SystemTray.IsVisible="True">
 
+    <phone:PhoneApplicationPage.ApplicationBar>
+        <shell:ApplicationBar>
+            <shell:ApplicationBar.MenuItems>
+                <shell:ApplicationBarMenuItem Text="удалить сессию" Click="RemoveTokenClick"/>
+            </shell:ApplicationBar.MenuItems>
+        </shell:ApplicationBar>
+    </phone:PhoneApplicationPage.ApplicationBar>
+    
     <Grid x:Name="LayoutRoot" Background="Transparent">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
