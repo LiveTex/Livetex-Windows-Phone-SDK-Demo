@@ -166,6 +166,13 @@ namespace LiveTex.SampleApp.ViewModel
 			{
 				var dialogState = await Client.GetDialogStateAsync();
 				await HandleDialogState(dialogState);
+
+				if(dialogState.State != DialogStates.NoConversation
+					&& !string.IsNullOrWhiteSpace(LiveTex.LiveTexClient.Message))
+				{
+					await SendMessage(LiveTex.LiveTexClient.Message);
+					LiveTex.LiveTexClient.Message = null;
+				}
 			});
 
 			await base.OnNavigatedTo();
@@ -218,6 +225,11 @@ namespace LiveTex.SampleApp.ViewModel
 			var message = MessageText;
 			await SyncExecute(() => MessageText = "");
 
+			await SendMessage(message);
+		}
+
+		private async Task SendMessage(string message)
+		{
 			Volatile.Write(ref _typingMessageInProgress, 0);
 
 			if (string.IsNullOrWhiteSpace(message))

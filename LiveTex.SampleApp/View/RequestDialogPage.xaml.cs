@@ -25,5 +25,16 @@ namespace LiveTex.SampleApp
 
 			ViewModel.NavigatedTo();
 		}
+
+		protected override void OnNavigatedFrom(NavigationEventArgs e)
+		{
+			base.OnNavigatedFrom(e);
+
+			if(e.NavigationMode == NavigationMode.New
+				&& e.IsNavigationInitiator)
+			{
+				NavigationService.RemoveBackEntry();
+			}
+		}
 	}
 }

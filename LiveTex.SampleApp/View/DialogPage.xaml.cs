@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Specialized;
+using System.ComponentModel;
 using System.Windows.Input;
 using System.Windows.Navigation;
 using LiveTex.SampleApp.ViewModel;
@@ -36,6 +37,14 @@ namespace LiveTex.SampleApp
 
 			ViewModel.Messages.CollectionChanged -= MessagesCollectionChanged;
 			ViewModel.NavigatedFrom();
+		}
+
+		protected override void OnBackKeyPress(CancelEventArgs e)
+		{
+			ViewModel.CloseDialogCommand.Execute(null);
+
+			e.Cancel = true;
+			base.OnBackKeyPress(e);
 		}
 
 		private void MessagesCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
