@@ -171,6 +171,16 @@ namespace LiveTex.SampleApp.ViewModel
 			}
 		}
 
+		protected override string GetErrorMessage(Exception ex)
+		{
+			if (string.Equals(ex.Message, "Unable to select chat member.", StringComparison.OrdinalIgnoreCase))
+			{
+				return "Нет ни одного оператора онлайн";
+			}
+
+			return base.GetErrorMessage(ex);
+		}
+
 		private async Task RequestDialog()
 		{
 			var attributes = new DialogAttributes

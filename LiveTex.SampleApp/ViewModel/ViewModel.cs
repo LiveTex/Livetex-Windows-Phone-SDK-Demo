@@ -89,9 +89,7 @@ namespace LiveTex.SampleApp.ViewModel
 					ex = aggregate.InnerException;
 				}
 
-				var message = ex is TransportException
-					? "Ошибка сетевого соединения"
-					: ex.Message;
+				var message = GetErrorMessage(ex);
 
 				MessageBox.Show(message, "Ошибка", MessageBoxButton.OK);
 
@@ -104,6 +102,13 @@ namespace LiveTex.SampleApp.ViewModel
 					IsBusy = false;
 				}
 			}
+		}
+
+		protected virtual string GetErrorMessage(Exception ex)
+		{
+			return ex is TransportException
+				   ? "Ошибка сетевого соединения"
+				   : ex.Message;
 		}
 
 		protected async Task SyncExecute(Action action)

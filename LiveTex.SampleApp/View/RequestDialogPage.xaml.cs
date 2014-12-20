@@ -31,6 +31,7 @@ namespace LiveTex.SampleApp
 			base.OnNavigatedFrom(e);
 
 			if(e.NavigationMode == NavigationMode.New
+				&& e.Uri.OriginalString.Contains("DialogPage.xaml")
 				&& e.IsNavigationInitiator)
 			{
 				NavigationService.RemoveBackEntry();
