@@ -97,11 +97,11 @@
     <Compile Include="Controls\ChatMessageControl.xaml.cs">
       <DependentUpon>ChatMessageControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Converters\BoolToAnyConverter.cs" />
     <Compile Include="Converters\BoolToVisibilityConverter.cs" />
     <Compile Include="Converters\ListItemWrapperConverter.cs" />
     <Compile Include="Converters\MessageDirectionToMarginConverter.cs" />
     <Compile Include="Converters\NullToVisibilityConverter.cs" />
-    <Compile Include="Converters\TestConverter.cs" />
     <Compile Include="Helpers\TextBoxHelper.cs" />
     <Compile Include="Helpers\VisualTreeHelperEx.cs" />
     <Compile Include="ViewModel\AbuseViewModel.cs" />

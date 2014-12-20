@@ -13,26 +13,24 @@
     SupportedOrientations="Portrait" Orientation="Portrait"
     shell:SystemTray.IsVisible="True">
 
-    <Grid x:Name="LayoutRoot" Background="Transparent">
+    <Grid x:Name="LayoutRoot" Background="White">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
-        <StackPanel x:Name="TitlePanel" Grid.Row="0" Margin="12,17,0,28">
-            <TextBlock Text="LIVETEX" Style="{StaticResource PhoneTextNormalStyle}" Margin="12,0"/>
-            <TextBlock Text="жалоба" Margin="9,-7,0,0" Style="{StaticResource PhoneTextTitle1Style}"/>
+        <StackPanel Grid.Row="0" Margin="12, 36, 12, 12">
+            <Image Source="{Binding EmployeeAvatar}" Width="128" Height="128" Margin="12,0,12,12" HorizontalAlignment="Left"/>
+            <TextBlock Foreground="{StaticResource LiveTexBlueBrush}" Text="{Binding EmployeeName}" Style="{StaticResource PhoneTextTitle2Style}" Margin="12,0" VerticalAlignment="Top" />
+            <TextBlock Text="Оставьте вашу жалобу" Foreground="DimGray" Style="{StaticResource PhoneTextTitle3Style}" Margin="12,0" VerticalAlignment="Top" />
         </StackPanel>
 
         <Grid x:Name="ContentPanel" Grid.Row="1" Margin="12,0,12,0">
             <StackPanel>
-                <TextBlock Text="Контакт" Style="{StaticResource PhoneTextSubtleStyle}" />
-                <TextBox Text="{Binding Contact, Mode=TwoWay}" />
+                <TextBlock Text="Напишите сообщение" Style="{StaticResource LiveTexLabelTextStyle}" />
+                <TextBox Text="{Binding Message, Mode=TwoWay}" IsEnabled="{Binding ConversationActive}" Height="168" />
 
-                <TextBlock Text="Сообщение" Style="{StaticResource PhoneTextSubtleStyle}" />
-                <TextBox Text="{Binding Message, Mode=TwoWay}" Height="168" />
-
-                <Button Content="Продолжить" Command="{Binding AbuseCommand}"  Margin="0,12,0,0" />
+                <Button Content="Отправить" IsEnabled="{Binding ConversationActive}" Command="{Binding AbuseCommand}" HorizontalAlignment="Left" Margin="0" Padding="12, 5, 12, 6" />
             </StackPanel>
         </Grid>
         

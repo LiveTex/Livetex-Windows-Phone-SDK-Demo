@@ -78,12 +78,12 @@ namespace LiveTex.SampleApp
 			ViewModel.CloseDialogCommand.Execute(null);
 		}
 
-		private void VoteUpClick(object sender, EventArgs e)
+		private void GoodButtonTap(object sender, System.Windows.Input.GestureEventArgs e)
 		{
 			ViewModel.VoteUpCommand.Execute(null);
 		}
 
-		private void VoteDownClick(object sender, EventArgs e)
+		private void BadButtonTap(object sender, System.Windows.Input.GestureEventArgs e)
 		{
 			ViewModel.VoteDownCommand.Execute(null);
 		}

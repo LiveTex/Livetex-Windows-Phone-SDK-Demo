@@ -277,6 +277,13 @@ namespace LiveTex.SampleApp.ViewModel
 		{
 			ConversationActive = dialogState.State == DialogStates.ConversationActive;
 
+			if(dialogState.Conversation == null)
+			{
+				EmployeeAvatar = null;
+				EmployeeName = "Диалог закрыт";
+				return;
+			}
+
 			if(dialogState.Employee == null)
 			{
 				EmployeeAvatar = null;

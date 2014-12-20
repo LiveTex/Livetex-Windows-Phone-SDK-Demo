@@ -2,10 +2,10 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using LiveTex.SampleApp.Wrappers;
+using LiveTex.SDK;
 using LiveTex.SDK.Client;
 using LiveTex.SDK.Sample;
 
@@ -178,6 +178,12 @@ namespace LiveTex.SampleApp.ViewModel
 				Hidden = new Dictionary<string, string> { { "platform", "win"} }
 			};
 
+			if(string.IsNullOrWhiteSpace(Message))
+			{
+				MessageBox.Show("Сообщение не может быть пустым", "Ошибка", MessageBoxButton.OK);
+				return;
+			}
+
 			if (!string.IsNullOrWhiteSpace(UserAge))
 			{
 				int age;
@@ -232,7 +238,7 @@ namespace LiveTex.SampleApp.ViewModel
 				return;
 			}
 
-			await WrapRequest(() => Client.SendTextMessage(Message));
+			LiveTex.LiveTexClient.Message = Message;
 
 			App.RootFrame.Navigate(new Uri("/View/DialogPage.xaml", UriKind.Relative));
 		}

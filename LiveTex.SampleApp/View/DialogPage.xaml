@@ -14,7 +14,8 @@
     Foreground="{StaticResource PhoneForegroundBrush}"
     SupportedOrientations="Portrait" Orientation="Portrait"
     mc:Ignorable="d"
-    shell:SystemTray.IsVisible="True">
+    shell:SystemTray.IsVisible="True"
+    shell:SystemTray.BackgroundColor="White">
     <phone:PhoneApplicationPage.Resources>
         <Style x:Key="ListBoxScreenWideItem" TargetType="ListBoxItem">
             <Setter Property="Background" Value="Transparent"/>
@@ -53,37 +54,45 @@
         </Style>
     </phone:PhoneApplicationPage.Resources>
     <phone:PhoneApplicationPage.ApplicationBar>
-        <shell:ApplicationBar>
+        <shell:ApplicationBar BackgroundColor="White" ForegroundColor="Black">
             <shell:ApplicationBar.MenuItems>
-                <shell:ApplicationBarMenuItem Text="жалоба" Click="AbuseClick"/>
-                <shell:ApplicationBarMenuItem Text="завершить диалог" Click="CloseDialogClick"/>
+                <shell:ApplicationBarMenuItem Text="оставить жалобу" Click="AbuseClick"/>
+                <shell:ApplicationBarMenuItem Text="закрыть обращение" Click="CloseDialogClick"/>
             </shell:ApplicationBar.MenuItems>
             <shell:ApplicationBarIconButton IconUri="/Assets/AppBar/Send.png" Text="отправить" Click="SendMessageClick"/>
-            <shell:ApplicationBarIconButton IconUri="/Assets/AppBar/Up.png" Text="хорошо" Click="VoteUpClick"/>
-            <shell:ApplicationBarIconButton IconUri="/Assets/AppBar/Down.png" Text="плохо" Click="VoteDownClick"/>
         </shell:ApplicationBar>
     </phone:PhoneApplicationPage.ApplicationBar>
 
-    <Grid x:Name="LayoutRoot" Background="Transparent">
+    <Grid x:Name="LayoutRoot" Background="White">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
-        <StackPanel Grid.Row="0" Margin="12,17,0,12">
-            <TextBlock Text="LIVETEX" Style="{StaticResource PhoneTextNormalStyle}"/>
-        </StackPanel>
-
-        <Grid Grid.Row="1" Margin="12,0,0,28">
+        <Grid Grid.Row="0" Margin="12,24,0,12">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
 
-            <Border Grid.Column="0" BorderBrush="{StaticResource PhoneBorderBrush}" BorderThickness="1" Width="64" Height="64" Margin="12" />
             <Image Grid.Column="0" Source="{Binding EmployeeAvatar}" Width="64" Height="64" Margin="12"/>
-            <TextBlock Grid.Column="1" Text="{Binding EmployeeName}" Style="{StaticResource PhoneTextTitle2Style}" Margin="12,0,0,0" VerticalAlignment="Top" />
+            <TextBlock Grid.Column="1" Foreground="{StaticResource LiveTexBlueBrush}" Text="{Binding EmployeeName}" Style="{StaticResource PhoneTextTitle2Style}" Margin="12,0,0,0" VerticalAlignment="Top" />
+        </Grid>
+        
+        <Grid Grid.Row="1" Background="LightGray">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+            
+            <TextBlock Text="ОЦЕНИТЕ КОНСУЛЬТАЦИЮ" Foreground="DimGray" Style="{StaticResource PhoneTextNormalStyle}" Margin="12, 12"/>
+
+            <TextBlock Grid.Column="1" Text="&#xe19f;" Padding="12" FontFamily="Segoe UI Symbol" Foreground="ForestGreen" VerticalAlignment="Center" HorizontalAlignment="Center" Tap="GoodButtonTap" />
+            <Grid Grid.Column="2" Width="2" Background="DimGray" Margin="0,6" />
+            <TextBlock Grid.Column="3" Text="&#xe19e;" Padding="12" FontFamily="Segoe UI Symbol" Foreground="Red" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="0,0,12,0" Tap="BadButtonTap" />
         </Grid>
 
         <Grid x:Name="ContentPanel" Grid.Row="2" Margin="12,0,12,0">
@@ -105,7 +114,7 @@
             <Grid Grid.Row="1">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="3*"/>
+                    <ColumnDefinition Width="6*"/>
                 </Grid.ColumnDefinitions>
 
                 <Grid.RowDefinitions>
@@ -113,14 +122,14 @@
                     <RowDefinition Height="Auto" />
                 </Grid.RowDefinitions>
 
-                <toolkit:PhoneTextBox Grid.Row="0" Grid.Column="1" MaxHeight="186" x:Name="viewMessageText" Margin="0, 0, 0, -12" AcceptsReturn="True" KeyDown="ViewMessageTextKeyDown" InputScope="Chat" Text="{Binding MessageText, Mode=TwoWay}" helpers:TextBoxHelper.UpdateSourceOnTextChanged="true" IsEnabled="{Binding ConversationActive}" />
-                <Polygon Grid.Row="1" Grid.Column="1" Fill="{StaticResource PhoneTextBoxBrush}" Width="12" Height="24" Points="0,0 12,0 12,12" StrokeThickness="0" RenderTransformOrigin="0.5, 0.5" HorizontalAlignment="Right" Margin="0,-1,24,12"/>
+                <toolkit:PhoneTextBox BorderBrush="Gray" Grid.Row="0" Grid.Column="1" MaxHeight="186" x:Name="viewMessageText" Margin="0, 0, 0, -12" AcceptsReturn="True" KeyDown="ViewMessageTextKeyDown" InputScope="Chat" Text="{Binding MessageText, Mode=TwoWay}" helpers:TextBoxHelper.UpdateSourceOnTextChanged="true" IsEnabled="{Binding ConversationActive}" />
+                <Polygon Grid.Row="1" Grid.Column="1" Fill="Gray" Width="12" Height="24" Points="0,0 12,0 12,12" StrokeThickness="0" RenderTransformOrigin="0.5, 0.5" HorizontalAlignment="Right" Margin="0,-1,24,12"/>
             </Grid>
         </Grid>
 
         <Grid Grid.Row="0" Grid.RowSpan="3" Visibility="{Binding IsBusy, Converter={StaticResource BoolToVisibilityConverter}}" d:IsHidden="True">
-            <Border Background="{StaticResource PhoneBackgroundBrush}" Opacity="0.75"/>
-            <TextBlock Text="Загрузка..." HorizontalAlignment="Center" VerticalAlignment="Center" />
+            <Border Background="White" Opacity="0.75"/>
+            <TextBlock Foreground="Black" Text="Загрузка..." HorizontalAlignment="Center" VerticalAlignment="Center" />
         </Grid>
     </Grid>
 
