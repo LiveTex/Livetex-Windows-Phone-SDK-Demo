@@ -141,7 +141,25 @@ namespace LiveTex.SampleApp.Wrappers
 				OnPropertyChanged();
 			}
 		}
-		public string Status { get; private set; }
+
+		private string _status;
+		public string Status
+		{
+			get { return _status; }
+			private set
+			{
+				if (string.Equals(_status, value, StringComparison.Ordinal))
+				{
+					return;
+				}
+
+				_status = value;
+
+				OnPropertyChanged();
+			}
+		}
+		
+		
 		public bool IsIncomingMessage { get; private set; }
 		public string Uri { get; private set; }
 
@@ -173,7 +191,7 @@ namespace LiveTex.SampleApp.Wrappers
 		public void MarkAsReceived()
 		{
 			Status = _timeStamp != null
-				? _timeStamp.Value.ToString("h:mm d MMM yyyy")
+				? "√ " + _timeStamp.Value.ToString("h:mm d MMM yyyy")
 				: null;
 		}
 
