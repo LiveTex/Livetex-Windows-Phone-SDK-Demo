@@ -33,6 +33,13 @@ namespace LiveTex.SampleApp.ViewModel
 			set { SetValue(ref _userAge, value); }
 		}
 
+		private string _message;
+		public string Message
+		{
+			get { return _message; }
+			set { SetValue(ref _message, value); }
+		}
+
 		private List<ListItemWrapper<Department>> _departments;
 		public List<ListItemWrapper<Department>> Departments
 		{
@@ -178,7 +185,7 @@ namespace LiveTex.SampleApp.ViewModel
 					|| age < 10
 					|| age > 99)
 				{
-					MessageBox.Show("Возвраст должен быть числом от 10 до 99", "Ошибка", MessageBoxButton.OK);
+					MessageBox.Show("Возраст должен быть числом от 10 до 99", "Ошибка", MessageBoxButton.OK);
 					return;
 				}
 
@@ -224,6 +231,8 @@ namespace LiveTex.SampleApp.ViewModel
 			{
 				return;
 			}
+
+			await WrapRequest(() => Client.SendTextMessage(Message));
 
 			App.RootFrame.Navigate(new Uri("/View/DialogPage.xaml", UriKind.Relative));
 		}

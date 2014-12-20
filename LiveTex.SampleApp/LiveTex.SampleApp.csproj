@@ -93,6 +93,7 @@
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Config.cs" />
     <Compile Include="Controls\ChatMessageControl.xaml.cs">
       <DependentUpon>ChatMessageControl.xaml</DependentUpon>
     </Compile>
@@ -170,6 +171,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Assets\AlignmentGrid.png" />
+    <Content Include="Assets\AppBar\check.png" />
     <Content Include="Assets\AppBar\Send.png" />
     <Content Include="Assets\AppBar\Down.png" />
     <Content Include="Assets\AppBar\Up.png" />
@@ -206,11 +208,11 @@
   <ItemGroup>
     <Reference Include="LiveTex.SDK, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\LiveTex.SDK.1.0.2.0\lib\windowsphone8\LiveTex.SDK.dll</HintPath>
+      <HintPath>..\packages\LiveTex.SDK.1.0.3.0\lib\windowsphone8\LiveTex.SDK.dll</HintPath>
     </Reference>
-    <Reference Include="LiveTex.Thrift, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\LiveTex.SDK.1.0.2.0\lib\windowsphone8\LiveTex.Thrift.dll</HintPath>
+    <Reference Include="LiveTex.Thrift">
+      <HintPath>..\packages\LiveTex.SDK.1.0.3.0\lib\windowsphone8\LiveTex.Thrift.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="Microsoft.Phone.Controls.Toolkit">
       <HintPath>..\packages\WPtoolkit.4.2013.08.16\lib\wp8\Microsoft.Phone.Controls.Toolkit.dll</HintPath>

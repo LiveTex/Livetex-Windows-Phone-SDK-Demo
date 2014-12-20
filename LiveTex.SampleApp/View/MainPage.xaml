@@ -9,47 +9,40 @@
     mc:Ignorable="d"
     FontFamily="{StaticResource PhoneFontFamilyNormal}"
     FontSize="{StaticResource PhoneFontSizeNormal}"
-    Foreground="{StaticResource PhoneForegroundBrush}"
+    Foreground="White"
     SupportedOrientations="Portrait" Orientation="Portrait"
-    shell:SystemTray.IsVisible="True">
+    shell:SystemTray.IsVisible="True"
+    shell:SystemTray.BackgroundColor="{StaticResource LiveTexBlueColor}">
 
     <phone:PhoneApplicationPage.ApplicationBar>
-        <shell:ApplicationBar>
+        <shell:ApplicationBar BackgroundColor="White" ForegroundColor="Black">
             <shell:ApplicationBar.MenuItems>
                 <shell:ApplicationBarMenuItem Text="удалить сессию" Click="RemoveTokenClick"/>
             </shell:ApplicationBar.MenuItems>
+            <shell:ApplicationBarIconButton IconUri="/Assets/AppBar/check.png" Text="готово" Click="InitializeClick"/>
         </shell:ApplicationBar>
     </phone:PhoneApplicationPage.ApplicationBar>
     
-    <Grid x:Name="LayoutRoot" Background="Transparent">
+    <Grid x:Name="LayoutRoot" Background="{StaticResource LiveTexBlueBrush}">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
         <StackPanel x:Name="TitlePanel" Grid.Row="0" Margin="12,17,0,28">
-            <TextBlock Text="LIVETEX" Style="{StaticResource PhoneTextNormalStyle}" Margin="12,0"/>
-            <TextBlock Text="настройки" Margin="9,-7,0,0" Style="{StaticResource PhoneTextTitle1Style}"/>
+            <TextBlock Text="НАСТРОЙКИ" Foreground="White" Style="{StaticResource PhoneTextNormalStyle}" Margin="12,0"/>
+            <TextBlock Text="введите код" Foreground="White" Margin="9,-7,0,0" Style="{StaticResource PhoneTextTitle1Style}"/>
         </StackPanel>
 
         <Grid x:Name="ContentPanel" Grid.Row="1" Margin="12,0,12,0">
             <StackPanel>
-                <TextBlock Text="Key" Style="{StaticResource PhoneTextSubtleStyle}" />
-                <TextBox Text="{Binding Key, Mode=TwoWay}" />
-
-                <TextBlock Text="ApplicationID" Style="{StaticResource PhoneTextSubtleStyle}" />
-                <TextBox Text="{Binding AppID, Mode=TwoWay}" />
-
-                <TextBlock Text="Authentication URI" Style="{StaticResource PhoneTextSubtleStyle}" />
-                <TextBox Text="{Binding AuthUri, Mode=TwoWay}" />
-
-                <Button Content="Продолжить" Command="{Binding InitializeClientCommand}"  Margin="0,12,0,0" />
+                <TextBox Text="{Binding Key, Mode=TwoWay}" Style="{StaticResource LiveTexWhiteTextBoxStyle}" />
             </StackPanel>
         </Grid>
         
-        <Grid Grid.Row="0" Grid.RowSpan="2" Visibility="{Binding IsBusy, Converter={StaticResource BoolToVisibilityConverter}}">
-            <Border Background="{StaticResource PhoneBackgroundBrush}" Opacity="0.75"/>
-            <TextBlock Text="Подключение..." HorizontalAlignment="Center" VerticalAlignment="Center" />
+        <Grid Grid.Row="0" Grid.RowSpan="2" Visibility="{Binding IsBusy, Converter={StaticResource BoolToVisibilityConverter}}" d:IsHidden="True">
+            <Border Background="White" Opacity="0.75"/>
+            <TextBlock Foreground="Black" Text="Подключение..." HorizontalAlignment="Center" VerticalAlignment="Center" />
         </Grid>
     </Grid>
 

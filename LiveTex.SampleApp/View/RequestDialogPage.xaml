@@ -13,68 +13,34 @@
     Foreground="{StaticResource PhoneForegroundBrush}"
     SupportedOrientations="Portrait" Orientation="Portrait"
     mc:Ignorable="d"
-    shell:SystemTray.IsVisible="True">
+    shell:SystemTray.IsVisible="True"
+    shell:SystemTray.BackgroundColor="White">
 
-    <phone:PhoneApplicationPage.Resources>
-        <converters:ListItemWrapperConverter x:Key="ListItemWrapperConverter" />
-    </phone:PhoneApplicationPage.Resources>
-    <!--LayoutRoot is the root grid where all page content is placed-->
-    <Grid x:Name="LayoutRoot" Background="Transparent">
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="*"/>
-        </Grid.RowDefinitions>
-
-        <!--TitlePanel contains the name of the application and page title-->
-        <StackPanel Grid.Row="0" Margin="12,17,0,28">
-            <TextBlock Text="LIVETEX" Style="{StaticResource PhoneTextNormalStyle}"/>
-            <TextBlock Text="новое обращение" Margin="9,-7,0,0" Style="{StaticResource PhoneTextTitle1Style}"/>
-        </StackPanel>
-
-        <!--ContentPanel - place additional content here-->
-        <Grid x:Name="ContentPanel" Grid.Row="1" Margin="12,0,12,0">
+    <Grid x:Name="LayoutRoot" Background="White">
+        <Grid x:Name="ContentPanel" Margin="12,36,12,0">
             <StackPanel>
-                <TextBlock Text="Имя" Style="{StaticResource PhoneTextSubtleStyle}" />
+                <TextBlock Text="Ваше имя" Style="{StaticResource LiveTexLabelTextStyle}" />
                 <TextBox Text="{Binding UserName, Mode=TwoWay}" />
 
-                <TextBlock Text="Возвраст" Style="{StaticResource PhoneTextSubtleStyle}" />
+                <TextBlock Text="Выберите оператора" Style="{StaticResource LiveTexLabelTextStyle}" />
+                <toolkit:ListPicker ItemsSource="{Binding Employees}" SelectedItem="{Binding Employee, Mode=TwoWay}" ExpansionMode="FullScreenOnly"/>
+                 
+                <TextBlock Text="Выберите отдел" Style="{StaticResource LiveTexLabelTextStyle}" />
+                <toolkit:ListPicker ItemsSource="{Binding Departments}" SelectedItem="{Binding Department, Mode=TwoWay}"/>
+                    
+                <TextBlock Text="Укажите возраст" Style="{StaticResource LiveTexLabelTextStyle}" />
                 <TextBox Text="{Binding UserAge, Mode=TwoWay}" />
 
-                <TextBlock Text="Департамент" Style="{StaticResource PhoneTextSubtleStyle}" />
-                <toolkit:ListPicker ItemsSource="{Binding Departments}" SelectedItem="{Binding Department, Mode=TwoWay}">
-                    <toolkit:ListPicker.FullModeItemTemplate>
-                        <DataTemplate>
-                            <TextBlock Text="{Binding Converter={StaticResource ListItemWrapperConverter}}" Style="{StaticResource PhoneTextTitle2Style}" Margin="12"/>
-                        </DataTemplate>
-                    </toolkit:ListPicker.FullModeItemTemplate>
-                    <toolkit:ListPicker.ItemTemplate>
-                        <DataTemplate>
-                            <TextBlock Text="{Binding Converter={StaticResource ListItemWrapperConverter}}"/>
-                        </DataTemplate>
-                    </toolkit:ListPicker.ItemTemplate>
-                </toolkit:ListPicker>
+                <TextBlock Text="Напишите сообщение" Style="{StaticResource LiveTexLabelTextStyle}" />
+                <TextBox Text="{Binding Message, Mode=TwoWay}" Height="168" AcceptsReturn="True" />
 
-                <TextBlock Text="Оператор" Style="{StaticResource PhoneTextSubtleStyle}" />
-                <toolkit:ListPicker ItemsSource="{Binding Employees}" SelectedItem="{Binding Employee, Mode=TwoWay}">
-                    <toolkit:ListPicker.FullModeItemTemplate>
-                        <DataTemplate>
-                            <TextBlock Text="{Binding Converter={StaticResource ListItemWrapperConverter}}" Style="{StaticResource PhoneTextTitle2Style}" Margin="12"/>
-                        </DataTemplate>
-                    </toolkit:ListPicker.FullModeItemTemplate>
-                    <toolkit:ListPicker.ItemTemplate>
-                        <DataTemplate>
-                            <TextBlock Text="{Binding Converter={StaticResource ListItemWrapperConverter}}"/>
-                        </DataTemplate>
-                    </toolkit:ListPicker.ItemTemplate>
-                </toolkit:ListPicker>
-
-                <Button Content="Продолжить" Margin="0,12,0,0" Command="{Binding RequestDialogCommand}"/>
+                <Button Content="Отправить" Margin="0,12,0,0" HorizontalAlignment="Left" Command="{Binding RequestDialogCommand}" Padding="24,5,24,6"/>
             </StackPanel>
         </Grid>
 
-        <Grid Grid.Row="0" Grid.RowSpan="2" Visibility="{Binding IsBusy, Converter={StaticResource BoolToVisibilityConverter}}" d:IsHidden="True">
-            <Border Background="{StaticResource PhoneBackgroundBrush}" Opacity="0.75"/>
-            <TextBlock Text="Загрузка..." HorizontalAlignment="Center" VerticalAlignment="Center" />
+        <Grid Visibility="{Binding IsBusy, Converter={StaticResource BoolToVisibilityConverter}}" d:IsHidden="True">
+            <Border Background="White" Opacity="0.75"/>
+            <TextBlock Foreground="Black" Text="Загрузка..." HorizontalAlignment="Center" VerticalAlignment="Center" />
         </Grid>
     </Grid>
 

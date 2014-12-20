@@ -30,5 +30,10 @@ namespace LiveTex.SampleApp
 		{
 			ViewModel.RemoveTokenCommand.Execute(null);
 		}
+
+		private void InitializeClick(object sender, EventArgs e)
+		{
+			ViewModel.InitializeClientCommand.Execute(null);
+		}
 	}
 }

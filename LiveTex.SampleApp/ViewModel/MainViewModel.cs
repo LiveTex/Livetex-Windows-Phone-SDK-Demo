@@ -1,8 +1,6 @@
 ﻿using System;
-using System.Net;
 using System.Threading.Tasks;
 using LiveTex.SampleApp.LiveTex;
-using LiveTex.SDK;
 using LiveTex.SDK.Client;
 using LiveTex.SDK.Sample;
 
@@ -12,14 +10,10 @@ namespace LiveTex.SampleApp.ViewModel
 		: ViewModel
 	{
 		private const string cKeyKey = "ApplicationKey";
-		private const string cAppIDKey = "ApplicationID";
-		private const string cAuthUriKey = "AuthenticatedUriKey";
 
 		protected override Task Initialize()
 		{
-			Key = Storage.GetValue(cKeyKey, "winphone_test");
-			AppID = Storage.GetValue(cAppIDKey, "89200");
-			AuthUri = Storage.GetValue(cAuthUriKey, "http://sdk.livetex.ru:10010");
+			Key = Storage.GetValue(cKeyKey, Config.cKey);
 
 			return Task.FromResult(true);
 		}
@@ -29,20 +23,6 @@ namespace LiveTex.SampleApp.ViewModel
 		{
 			get { return _key; }
 			set { SetValue(ref _key, value); }
-		}
-
-		private string _appID;
-		public string AppID 
-		{
-			get { return _appID; }
-			set { SetValue(ref _appID, value); }
-		}
-
-		private string _authUri;
-		public string AuthUri
-		{
-			get { return _authUri; }
-			set { SetValue(ref _authUri, value); }
 		}
 
 		private DelegateCommand _removeTokenCommand;
@@ -79,31 +59,17 @@ namespace LiveTex.SampleApp.ViewModel
 				{
 					if (string.IsNullOrWhiteSpace(Key))
 					{
-						throw new Exception("Key не задан");
+						throw new Exception("Код не задан");
 					}
 
-					if (string.IsNullOrWhiteSpace(AppID))
-					{
-						throw new Exception("ApplicationID не задан");
-					}
-
-					if (string.IsNullOrWhiteSpace(AuthUri))
-					{
-						throw new Exception("Authentication Uri не задан");
-					}
-
-					if(!Equals(Storage.GetValue<string>(cKeyKey), Key)
-						|| !Equals(Storage.GetValue<string>(cAppIDKey), AppID)
-						|| !Equals(Storage.GetValue<string>(cAuthUriKey), AuthUri))
+					if(!Equals(Storage.GetValue<string>(cKeyKey), Key))
 					{
 						LiveTexClient.RemoveToken();
 					}
 
 					Storage.SetValue(cKeyKey, Key);
-					Storage.SetValue(cAppIDKey, AppID);
-					Storage.SetValue(cAuthUriKey, AuthUri);
 
-					await LiveTexClient.Initialize(Key, AppID, AuthUri);
+					await LiveTexClient.Initialize(Key, Config.cApplicationID, Config.cAuthServiceUri);
 
 					var dialogState = await LiveTexClient.Client.GetDialogStateAsync();
 
