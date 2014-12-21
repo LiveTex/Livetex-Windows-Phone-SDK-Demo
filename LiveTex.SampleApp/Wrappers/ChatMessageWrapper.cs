@@ -1,9 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel;
-using System.Linq;
 using System.Runtime.CompilerServices;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using LiveTex.SDK.Client;
@@ -21,13 +18,12 @@ namespace LiveTex.SampleApp.Wrappers
 	public class ChatMessageWrapper
 		: INotifyPropertyChanged, IDisposable
 	{
-		private readonly DateTime? _timeStamp;
 		private readonly ChatMessageType _messageType;
 		private readonly CancellationTokenSource _cts = new CancellationTokenSource();
 
 		public ChatMessageWrapper(string message)
 		{
-			_timeStamp = DateTime.Now;
+			TimeStamp = DateTime.Now;
 
 			_messageType = ChatMessageType.Text;
 			
@@ -45,14 +41,14 @@ namespace LiveTex.SampleApp.Wrappers
 			}
 
 			_messageType = ChatMessageType.Text;
-			_timeStamp = textMessage.Timestamp;
+			TimeStamp = textMessage.Timestamp;
 			
 			MessageID = textMessage.Id;
 			Message = textMessage.Text;
 			IsIncomingMessage = textMessage.SenderID != null;
 
-			Status = _timeStamp != null
-				? _timeStamp.Value.ToString("h:mm d MMM yyyy")
+			Status = TimeStamp != null
+				? TimeStamp.Value.ToString("h:mm d MMM yyyy")
 				: null;
 		}
 
@@ -67,12 +63,12 @@ namespace LiveTex.SampleApp.Wrappers
 
 			MessageID = fileMessage.Id;
 			Message = fileMessage.Text;
-			_timeStamp = fileMessage.Timestamp;
+			TimeStamp = fileMessage.Timestamp;
 			IsIncomingMessage = true;
 			Uri = fileMessage.Url;
 
-			Status = _timeStamp != null
-				? _timeStamp.Value.ToString("h:mm d MMM yyyy")
+			Status = TimeStamp != null
+				? TimeStamp.Value.ToString("h:mm d MMM yyyy")
 				: null;
 		}
 
@@ -86,11 +82,11 @@ namespace LiveTex.SampleApp.Wrappers
 			_messageType = ChatMessageType.Hold;
 
 			Message = holdMessage.Text;
-			_timeStamp = holdMessage.Timestamp;
+			TimeStamp = holdMessage.Timestamp;
 			IsIncomingMessage = true;
 
-			Status = _timeStamp != null
-				? _timeStamp.Value.ToString("h:mm d MMM yyyy")
+			Status = TimeStamp != null
+				? TimeStamp.Value.ToString("h:mm d MMM yyyy")
 				: null;
 		}
 
@@ -106,6 +102,8 @@ namespace LiveTex.SampleApp.Wrappers
 
 			StartTypingAnimation();
 		}
+
+		public DateTime? TimeStamp { get; private set; }
 
 		private string _messageID;
 		public string MessageID
@@ -190,8 +188,8 @@ namespace LiveTex.SampleApp.Wrappers
 
 		public void MarkAsReceived()
 		{
-			Status = _timeStamp != null
-				? "√ " + _timeStamp.Value.ToString("h:mm d MMM yyyy")
+			Status = TimeStamp != null
+				? "√ " + TimeStamp.Value.ToString("h:mm d MMM yyyy")
 				: null;
 		}
 

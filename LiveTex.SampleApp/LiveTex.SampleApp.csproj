@@ -131,6 +131,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>AppResources.resx</DependentUpon>
     </Compile>
+    <Compile Include="Wrappers\ChatMessageCollection.cs" />
     <Compile Include="Wrappers\ChatMessageWrapper.cs" />
     <Compile Include="Wrappers\ListItemWrapper.cs" />
   </ItemGroup>

@@ -60,15 +60,6 @@ namespace LiveTex.SampleApp
 			SendMessageAndHideKeyboard();
 		}
 
-		private void ViewMessageTextKeyDown(object sender, KeyEventArgs e)
-		{
-			if (e.Key == Key.Enter)
-			{
-				e.Handled = true;
-				SendMessageAndHideKeyboard();
-			}
-		}
-
 		private void SendMessageAndHideKeyboard()
 		{
 			ViewModel.SendMessageCommand.Execute(null);

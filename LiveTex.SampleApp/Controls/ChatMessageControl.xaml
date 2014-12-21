@@ -12,6 +12,14 @@
 
     <Grid x:Name="LayoutRoot">
         <Grid.Resources>
+            <converters:BoolToAnyConverter x:Key="ForegroundConverter">
+                <converters:BoolToAnyConverter.TrueValue>
+                    <SolidColorBrush Color="Black" />
+                </converters:BoolToAnyConverter.TrueValue>
+                <converters:BoolToAnyConverter.FalseValue>
+                    <SolidColorBrush Color="White" />
+                </converters:BoolToAnyConverter.FalseValue>
+            </converters:BoolToAnyConverter>
             <converters:BoolToAnyConverter x:Key="BackgroundConverter">
                 <converters:BoolToAnyConverter.TrueValue>
                     <SolidColorBrush Color="LightGray" />
@@ -37,9 +45,9 @@
 
             <Border Grid.Row="1" Background="{Binding IsIncomingMessage, Converter={StaticResource BackgroundConverter}}" Padding="0,12" Margin="12,0,12,0">
                 <StackPanel>
-                    <TextBlock Text="{Binding Message}" Style="{StaticResource PhoneTextNormalStyle}" TextWrapping="Wrap"/>
-                    <HyperlinkButton x:Name="viewUri" Content="{Binding Uri}" Visibility="{Binding Uri, Converter={StaticResource NullToVisibilityConverter}}" Click="UriOnClick" />
-                    <TextBlock Text="{Binding Status}" Style="{StaticResource PhoneTextSubtleStyle}" HorizontalAlignment="Right" Visibility="{Binding Status, Converter={StaticResource NullToVisibilityConverter}}" />
+                    <TextBlock Foreground="{Binding IsIncomingMessage, Converter={StaticResource ForegroundConverter}}" Text="{Binding Message}" Style="{StaticResource PhoneTextNormalStyle}" TextWrapping="Wrap"/>
+                    <HyperlinkButton Foreground="{Binding IsIncomingMessage, Converter={StaticResource ForegroundConverter}}"  x:Name="viewUri" Content="{Binding Uri}" Visibility="{Binding Uri, Converter={StaticResource NullToVisibilityConverter}}" Click="UriOnClick" />
+                    <TextBlock Foreground="{Binding IsIncomingMessage, Converter={StaticResource ForegroundConverter}}" Text="{Binding Status}" Style="{StaticResource PhoneTextSmallStyle}" Opacity="0.65" HorizontalAlignment="Right" Visibility="{Binding Status, Converter={StaticResource NullToVisibilityConverter}}" />
                 </StackPanel>
             </Border>
 

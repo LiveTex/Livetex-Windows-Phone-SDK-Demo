@@ -15,14 +15,14 @@ namespace LiveTex.SampleApp.ViewModel
 	public class DialogViewModel
 		: ViewModel, ILiveTexEventsHandler
 	{
-		private readonly ObservableCollection<ChatMessageWrapper> _messages;
+		private readonly ChatMessageCollection _messages;
 
 		public DialogViewModel()
 		{
-			_messages = new ObservableCollection<ChatMessageWrapper>();
+			_messages = new ChatMessageCollection();
 		}
 
-		public ObservableCollection<ChatMessageWrapper> Messages
+		public ChatMessageCollection Messages
 		{
 			get { return _messages; }
 		}
@@ -140,28 +140,75 @@ namespace LiveTex.SampleApp.ViewModel
 
 		#endregion
 
-		protected override async Task Initialize()
-		{
-			List<TextMessage> messages = null;
-			var result = await WrapRequest(async () => messages = await Client.GetMessagesHistoryAsync(10, 0));
-
-			if (result)
-			{
-				Messages.Clear();
-
-				foreach (var textMessage in messages)
-				{
-					Messages.Add(new ChatMessageWrapper(textMessage));
-				}
-			}
-		}
-
 		private IDisposable _eventsSubscription;
 
 		protected override async Task OnNavigatedTo()
 		{
+			var lastMessage = Messages.LastOrDefault(m => m.TimeStamp.HasValue && !string.IsNullOrWhiteSpace(m.MessageID));
+			var newMessages = new List<TextMessage>();
+
+			short offeset = 0;
+
+			while (true)
+			{
+				List<TextMessage> messages = null;
+				var result = await WrapRequest(async () => 
+				{
+					messages = await Client.GetMessagesHistoryAsync(10, offeset);
+					offeset += 10;
+				});
+
+				if(!result)
+				{
+					break;
+				}
+
+				if(lastMessage == null)
+				{
+					newMessages.AddRange(messages);
+
+					// Should be removed when offset bug is fixed
+					break;
+
+					continue;
+				}
+
+				foreach (var textMessage in messages)
+				{
+					if (string.Equals(textMessage.Id, lastMessage.MessageID, StringComparison.Ordinal))
+					{
+						lastMessage = null;
+						break;
+					}
+
+					if(textMessage.Timestamp != null
+						&& textMessage.Timestamp < lastMessage.TimeStamp)
+					{
+						lastMessage = null;
+						break;
+					}
+
+					newMessages.Add(textMessage);
+				}
+
+				if(lastMessage == null)
+				{
+					break;
+				}
+
+				// Should be removed when offset bug is fixed
+				break;
+			}
+
+			newMessages.Reverse();
+
+			foreach (var textMessage in newMessages)
+			{
+				Messages.Add(new ChatMessageWrapper(textMessage));
+			}
+
 			_eventsSubscription = Client.SubscribeToEvents(this);
-			
+
 			await WrapRequest(async () =>
 			{
 				var dialogState = await Client.GetDialogStateAsync();
