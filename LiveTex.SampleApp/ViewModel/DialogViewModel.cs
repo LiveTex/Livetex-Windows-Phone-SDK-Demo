@@ -284,18 +284,20 @@ namespace LiveTex.SampleApp.ViewModel
 				return;
 			}
 
+			message = message.Replace("\r", "\n");
+
 			var messageWrapper = new ChatMessageWrapper(message);
 			Messages.Add(messageWrapper);
 
 			await WrapRequest(async () =>
 			{
-				var textMessage = await Client.SendTextMessage(message);
+				var textMessage = await Client.SendTextMessageAsync(message);
 				if (textMessage != null)
 				{
 					await SyncExecute(() => 
 					{
 						messageWrapper.SetMassageID(textMessage.Id); 
-						Messages.UpdateMessage(messageWrapper); 
+						Messages.UpdateMessage(messageWrapper);
 					});
 				}
 			}, false);
@@ -350,7 +352,7 @@ namespace LiveTex.SampleApp.ViewModel
 			if(dialogState.Employee == null)
 			{
 				EmployeeAvatar = null;
-				EmployeeName = "Не назначен";
+				EmployeeName = "Оператор не назначен";
 				return;
 			}
 

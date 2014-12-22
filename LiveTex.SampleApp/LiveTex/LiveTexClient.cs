@@ -1,8 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO.IsolatedStorage;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using LiveTex.SDK;
 using LiveTex.SDK.Client;
@@ -15,6 +12,12 @@ namespace LiveTex.SampleApp.LiveTex
 		
 		public static async Task Initialize(string key, string applicationID, string authServerUri)
 		{
+			if(_client != null)
+			{
+				_client.Dispose();
+				_client = null;
+			}
+
 			var factory = new LiveTexClientFactory(key, applicationID, new Uri(authServerUri));
 			_client = await factory.CreateAsync(Token, Capabilities.Chat, Capabilities.FilesReceive, Capabilities.Invitation);
 
