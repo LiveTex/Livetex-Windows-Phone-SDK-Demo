@@ -36,7 +36,14 @@
 
         <Grid x:Name="ContentPanel" Grid.Row="1" Margin="12,0,12,0">
             <StackPanel>
+                <TextBlock Text="Key" Style="{StaticResource PhoneTextSubtleStyle}" Foreground="White" Opacity="0.7" />
                 <TextBox Text="{Binding Key, Mode=TwoWay}" Style="{StaticResource LiveTexWhiteTextBoxStyle}" />
+
+                <TextBlock Text="ApplicationID" Style="{StaticResource PhoneTextSubtleStyle}" Foreground="White" Opacity="0.7" />
+                <TextBox Text="{Binding AppID, Mode=TwoWay}" Style="{StaticResource LiveTexWhiteTextBoxStyle}" />
+
+                <TextBlock Text="Authentication URI" Style="{StaticResource PhoneTextSubtleStyle}" Foreground="White" Opacity="0.7" />
+                <TextBox Text="{Binding AuthUri, Mode=TwoWay}" Style="{StaticResource LiveTexWhiteTextBoxStyle}" />
             </StackPanel>
         </Grid>
         

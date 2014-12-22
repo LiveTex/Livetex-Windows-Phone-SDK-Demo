@@ -23,7 +23,7 @@
                 <TextBox Text="{Binding UserName, Mode=TwoWay}" />
 
                 <TextBlock Text="Выберите оператора" Style="{StaticResource LiveTexLabelTextStyle}" />
-                <toolkit:ListPicker ItemsSource="{Binding Employees}" SelectedItem="{Binding Employee, Mode=TwoWay}" ExpansionMode="FullScreenOnly"/>
+                <toolkit:ListPicker ItemsSource="{Binding Employees}" SelectedItem="{Binding Employee, Mode=TwoWay}" />
                  
                 <TextBlock Text="Выберите отдел" Style="{StaticResource LiveTexLabelTextStyle}" />
                 <toolkit:ListPicker ItemsSource="{Binding Departments}" SelectedItem="{Binding Department, Mode=TwoWay}"/>
