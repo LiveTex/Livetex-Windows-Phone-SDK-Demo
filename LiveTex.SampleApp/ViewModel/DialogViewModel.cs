@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
+using LiveTex.SampleApp.LiveTex;
 using LiveTex.SampleApp.Wrappers;
 using LiveTex.SDK;
 using LiveTex.SDK.Client;
@@ -215,10 +215,10 @@ namespace LiveTex.SampleApp.ViewModel
 				await HandleDialogState(dialogState);
 
 				if(dialogState.State != DialogStates.NoConversation
-					&& !string.IsNullOrWhiteSpace(LiveTex.LiveTexClient.Message))
+					&& !string.IsNullOrWhiteSpace(LiveTexClient.Message))
 				{
-					await SendMessage(LiveTex.LiveTexClient.Message);
-					LiveTex.LiveTexClient.Message = null;
+					await SendMessage(LiveTexClient.Message);
+					LiveTexClient.Message = null;
 				}
 			});
 
@@ -292,7 +292,11 @@ namespace LiveTex.SampleApp.ViewModel
 				var textMessage = await Client.SendTextMessage(message);
 				if (textMessage != null)
 				{
-					await SyncExecute(() => messageWrapper.SetMassageID(textMessage.Id));
+					await SyncExecute(() => 
+					{
+						messageWrapper.SetMassageID(textMessage.Id); 
+						Messages.UpdateMessage(messageWrapper); 
+					});
 				}
 			}, false);
 		}
@@ -388,13 +392,7 @@ namespace LiveTex.SampleApp.ViewModel
 		{
 			SyncExecute(() =>
 			{
-				var message = Messages.FirstOrDefault(m => string.Equals(m.MessageID, messageId, StringComparison.OrdinalIgnoreCase));
-				if (message == null)
-				{
-					return;
-				}
-
-				message.MarkAsReceived();
+				Messages.MarkAsReceived(messageId);
 			});
 		}
 
