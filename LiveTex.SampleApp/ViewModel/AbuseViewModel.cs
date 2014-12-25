@@ -1,12 +1,16 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
+using LiveTex.SDK;
 using LiveTex.SDK.Client;
 using LiveTex.SDK.Sample;
 
 namespace LiveTex.SampleApp.ViewModel
 {
 	public class AbuseViewModel
-		: ViewModel
+		: ViewModel, ILiveTexEventsHandler
 	{
+		private IDisposable _eventsSubscription;
+
 		#region Model properties
 
 		private string _employeeAvatar;
@@ -74,7 +78,8 @@ namespace LiveTex.SampleApp.ViewModel
 
 		private bool IsAbuseAllowed()
 		{
-			return !string.IsNullOrWhiteSpace(Message)
+			return ConversationActive
+				&& !string.IsNullOrWhiteSpace(Message)
 				&& !string.IsNullOrWhiteSpace(Contact);
 		}
 
@@ -101,6 +106,19 @@ namespace LiveTex.SampleApp.ViewModel
 			});
 
 			await base.OnNavigatedTo();
+
+			_eventsSubscription = Client.SubscribeToEvents(this);
+		}
+
+		protected override Task OnNavigatedForm()
+		{
+			if (_eventsSubscription != null)
+			{
+				_eventsSubscription.Dispose();
+				_eventsSubscription = null;
+			}
+
+			return base.OnNavigatedForm();
 		}
 
 		private async Task HandleDialogState(DialogState dialogState)
@@ -123,6 +141,35 @@ namespace LiveTex.SampleApp.ViewModel
 
 			EmployeeAvatar = dialogState.Employee.Avatar;
 			EmployeeName = dialogState.Employee.Firstname + " " + dialogState.Employee.Lastname;
+		}
+
+		void ILiveTexEventsHandler.Ban(string message)
+		{
+		}
+
+		void ILiveTexEventsHandler.UpdateDialogState(DialogState dialogState)
+		{
+			HandleDialogState(dialogState);
+		}
+
+		void ILiveTexEventsHandler.ReceiveFileMessage(FileMessage message)
+		{
+		}
+
+		void ILiveTexEventsHandler.ReceiveTextMessage(TextMessage message)
+		{
+		}
+
+		void ILiveTexEventsHandler.ConfirmTextMessage(string messageId)
+		{
+		}
+
+		void ILiveTexEventsHandler.ReceiveHoldMessage(HoldMessage message)
+		{
+		}
+
+		void ILiveTexEventsHandler.ReceiveTypingMessage(TypingMessage message)
+		{
 		}
 	}
 }

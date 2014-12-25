@@ -1,10 +1,13 @@
 ﻿using System;
 using System.Collections.Specialized;
 using System.ComponentModel;
+using System.Linq;
+using System.Windows;
 using System.Windows.Input;
 using System.Windows.Navigation;
 using LiveTex.SampleApp.ViewModel;
 using Microsoft.Phone.Controls;
+using Microsoft.Phone.Shell;
 
 namespace LiveTex.SampleApp
 {
@@ -18,6 +21,80 @@ namespace LiveTex.SampleApp
 			DataContext = new DialogViewModel();
 		}
 
+		#region Attached properties
+
+		public static readonly DependencyProperty IsAbuseMenuVisibleProperty = DependencyProperty.RegisterAttached(
+			"IsAbuseMenuVisible", typeof(bool), typeof(DialogPage), new PropertyMetadata(default(bool), OnIsAbuseMenuVisibleChanged));
+
+		public static void SetIsAbuseMenuVisible(DependencyObject element, bool value)
+		{
+			element.SetValue(IsAbuseMenuVisibleProperty, value);
+		}
+
+		public static bool GetIsAbuseMenuVisible(DependencyObject element)
+		{
+			return (bool) element.GetValue(IsAbuseMenuVisibleProperty);
+		}
+
+		private static void OnIsAbuseMenuVisibleChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+		{
+			var page = d as DialogPage;
+
+			if (page == null)
+			{
+				return;
+			}
+
+			if (e.NewValue is bool)
+			{
+				page.OnIsAbuseMenuVisibleChanged((bool)e.NewValue);
+			}
+		}
+
+		private void OnIsAbuseMenuVisibleChanged(bool value)
+		{
+			if (AbuseMenuItem == null)
+			{
+				Loaded += UpdateAbuseMenuItemOnLoad;
+				return;
+			}
+
+			AbuseMenuItem.IsEnabled = value;
+		}
+
+		private void UpdateAbuseMenuItemOnLoad(object sender, RoutedEventArgs e)
+		{
+			Loaded -= UpdateAbuseMenuItemOnLoad;
+
+			if (AbuseMenuItem == null)
+			{
+				return;
+			}
+
+			AbuseMenuItem.IsEnabled = GetIsAbuseMenuVisible(this);
+		}
+
+		#endregion
+
+		private ApplicationBarMenuItem _abuseMenuItem;
+		private ApplicationBarMenuItem AbuseMenuItem
+		{
+			get
+			{
+				if (_abuseMenuItem == null)
+				{
+					if (ApplicationBar == null)
+					{
+						return null;
+					}
+
+					_abuseMenuItem = ApplicationBar.MenuItems.OfType<ApplicationBarMenuItem>().FirstOrDefault(i => i.Text == "оставить жалобу");
+				}
+
+				return _abuseMenuItem;
+			}
+		}
+
 		private DialogViewModel ViewModel
 		{
 			get { return (DialogViewModel)DataContext; }
@@ -28,7 +105,6 @@ namespace LiveTex.SampleApp
 			base.OnNavigatedTo(e);
 
 			ViewModel.Messages.CollectionChanged += MessagesCollectionChanged;
-			ViewModel.PropertyChanged += ViewModelPropertyChanged;
 			ViewModel.NavigatedTo();
 		}
 
@@ -37,7 +113,6 @@ namespace LiveTex.SampleApp
 			base.OnNavigatedFrom(e);
 
 			ViewModel.Messages.CollectionChanged -= MessagesCollectionChanged;
-			ViewModel.PropertyChanged -= ViewModelPropertyChanged;
 			ViewModel.NavigatedFrom();
 		}
 
@@ -57,14 +132,6 @@ namespace LiveTex.SampleApp
 			}
 		}
 
-		private void ViewModelPropertyChanged(object sender, PropertyChangedEventArgs e)
-		{
-			if (viewAbuseMenuItem != null && ViewModel != null)
-			{
-				viewAbuseMenuItem.IsEnabled = ViewModel.IsAbuseAllowed;
-			}
-		}
-		
 		private void SendMessageClick(object sender, EventArgs e)
 		{
 			SendMessageAndHideKeyboard();

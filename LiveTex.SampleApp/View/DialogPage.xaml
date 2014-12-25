@@ -9,13 +9,16 @@
     xmlns:toolkit="clr-namespace:Microsoft.Phone.Controls;assembly=Microsoft.Phone.Controls.Toolkit"
     xmlns:controls="clr-namespace:LiveTex.SampleApp.Controls"
     xmlns:helpers="clr-namespace:LiveTex.SampleApp.Helpers"
+    xmlns:local="clr-namespace:LiveTex.SampleApp"
+    xmlns:converters="clr-namespace:LiveTex.SampleApp.Converters"
     FontFamily="{StaticResource PhoneFontFamilyNormal}"
     FontSize="{StaticResource PhoneFontSizeNormal}"
     Foreground="{StaticResource PhoneForegroundBrush}"
     SupportedOrientations="Portrait" Orientation="Portrait"
     mc:Ignorable="d"
     shell:SystemTray.IsVisible="True"
-    shell:SystemTray.BackgroundColor="White">
+    shell:SystemTray.BackgroundColor="White"
+    local:DialogPage.IsAbuseMenuVisible="{Binding IsAbuseAllowed}">
     <phone:PhoneApplicationPage.Resources>
         <Style x:Key="ListBoxScreenWideItem" TargetType="ListBoxItem">
             <Setter Property="Background" Value="Transparent"/>
@@ -52,7 +55,7 @@
                 </Setter.Value>
             </Setter>
         </Style>
-        <Style x:Key="TextBoxStyle1" TargetType="TextBox">
+        <Style x:Key="MessageTextBoxStyle" TargetType="TextBox">
             <Setter Property="FontFamily" Value="{StaticResource PhoneFontFamilyNormal}"/>
             <Setter Property="FontSize" Value="{StaticResource PhoneFontSizeMediumLarge}"/>
             <Setter Property="Background" Value="White"/>
@@ -146,11 +149,29 @@
                 </Setter.Value>
             </Setter>
         </Style>
+        
+        <converters:BoolToAnyConverter x:Key="GreenToGrayConverter">
+            <converters:BoolToAnyConverter.TrueValue>
+                <SolidColorBrush Color="ForestGreen"/>
+            </converters:BoolToAnyConverter.TrueValue>
+            <converters:BoolToAnyConverter.FalseValue>
+                <SolidColorBrush Color="DarkGray"/>
+            </converters:BoolToAnyConverter.FalseValue>
+        </converters:BoolToAnyConverter>
+
+        <converters:BoolToAnyConverter x:Key="RedToGrayConverter">
+            <converters:BoolToAnyConverter.TrueValue>
+                <SolidColorBrush Color="Red"/>
+            </converters:BoolToAnyConverter.TrueValue>
+            <converters:BoolToAnyConverter.FalseValue>
+                <SolidColorBrush Color="DarkGray"/>
+            </converters:BoolToAnyConverter.FalseValue>
+        </converters:BoolToAnyConverter>
     </phone:PhoneApplicationPage.Resources>
     <phone:PhoneApplicationPage.ApplicationBar>
         <shell:ApplicationBar BackgroundColor="White" ForegroundColor="Black">
             <shell:ApplicationBar.MenuItems>
-                <shell:ApplicationBarMenuItem x:Name="viewAbuseMenuItem" Text="оставить жалобу" Click="AbuseClick"/>
+                <shell:ApplicationBarMenuItem Text="оставить жалобу" Click="AbuseClick"/>
                 <shell:ApplicationBarMenuItem Text="закрыть обращение" Click="CloseDialogClick"/>
             </shell:ApplicationBar.MenuItems>
             <shell:ApplicationBarIconButton IconUri="/Assets/AppBar/Send.png" Text="отправить" Click="SendMessageClick"/>
@@ -184,9 +205,9 @@
 
             <TextBlock Text="ОЦЕНИТЕ КОНСУЛЬТАЦИЮ" Foreground="DimGray" Style="{StaticResource PhoneTextNormalStyle}" Margin="12, 12"/>
 
-            <TextBlock Grid.Column="1" Text="&#xe19f;" Padding="12" FontFamily="Segoe UI Symbol" Foreground="ForestGreen" VerticalAlignment="Center" HorizontalAlignment="Center" Tap="GoodButtonTap" />
+            <TextBlock Grid.Column="1" Text="&#xe19f;" Padding="12" FontFamily="Segoe UI Symbol" Foreground="{Binding ConversationActive, Converter={StaticResource GreenToGrayConverter}}" VerticalAlignment="Center" HorizontalAlignment="Center" Tap="GoodButtonTap" />
             <Grid Grid.Column="2" Width="2" Background="DimGray" Margin="0,6" />
-            <TextBlock Grid.Column="3" Text="&#xe19e;" Padding="12" FontFamily="Segoe UI Symbol" Foreground="Red" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="0,0,12,0" Tap="BadButtonTap" />
+            <TextBlock Grid.Column="3" Text="&#xe19e;" Padding="12" FontFamily="Segoe UI Symbol" Foreground="{Binding ConversationActive, Converter={StaticResource RedToGrayConverter}}" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="0,0,12,0" Tap="BadButtonTap" />
         </Grid>
 
         <Grid x:Name="ContentPanel" Grid.Row="2" Margin="12,0,12,0">
@@ -216,7 +237,7 @@
                     <RowDefinition Height="Auto" />
                 </Grid.RowDefinitions>
 
-                <TextBox Grid.Row="0" Grid.Column="1" MaxHeight="186" x:Name="viewMessageText" Margin="0" InputScope="Chat" Text="{Binding MessageText, Mode=TwoWay}" helpers:TextBoxHelper.UpdateSourceOnTextChanged="true" IsEnabled="{Binding ConversationActive}" Style="{StaticResource TextBoxStyle1}" AcceptsReturn="True" />
+                <TextBox Grid.Row="0" Grid.Column="1" MaxHeight="186" x:Name="viewMessageText" Margin="0" InputScope="Chat" Text="{Binding MessageText, Mode=TwoWay}" helpers:TextBoxHelper.UpdateSourceOnTextChanged="true" IsEnabled="{Binding ConversationActive}" Style="{StaticResource MessageTextBoxStyle}" AcceptsReturn="True" />
             </Grid>
         </Grid>
 

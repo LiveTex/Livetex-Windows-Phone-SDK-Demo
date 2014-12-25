@@ -109,7 +109,7 @@ namespace LiveTex.SampleApp.ViewModel
 			{
 				if(_voteUpCommand == null)
 				{
-					_voteUpCommand = new DelegateCommand(VoteUp);
+					_voteUpCommand = new DelegateCommand(VoteUp, () => ConversationActive);
 				}
 
 				return _voteUpCommand;
@@ -123,7 +123,7 @@ namespace LiveTex.SampleApp.ViewModel
 			{
 				if(_voteDownCommand == null)
 				{
-					_voteDownCommand = new DelegateCommand(VoteDown);
+					_voteDownCommand = new DelegateCommand(VoteDown, () => ConversationActive);
 				}
 
 				return _voteDownCommand;
@@ -137,7 +137,7 @@ namespace LiveTex.SampleApp.ViewModel
 			{
 				if(_abuseCommand == null)
 				{
-					_abuseCommand = new DelegateCommand(Abuse);
+					_abuseCommand = new DelegateCommand(Abuse, () => ConversationActive);
 				}
 
 				return _abuseCommand;
@@ -346,9 +346,9 @@ namespace LiveTex.SampleApp.ViewModel
 
 		private async Task HandleDialogState(DialogState dialogState)
 		{
-			ConversationActive = dialogState.State == DialogStates.ConversationActive;
-			IsAbuseAllowed = dialogState.Employee != null;
-
+			ConversationActive = dialogState.State != DialogStates.NoConversation;
+			IsAbuseAllowed = dialogState.State == DialogStates.ConversationActive;
+			
 			if(dialogState.Conversation == null)
 			{
 				EmployeeAvatar = null;
