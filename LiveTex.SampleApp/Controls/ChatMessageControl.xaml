@@ -46,7 +46,7 @@
             <Border Grid.Row="1" Background="{Binding IsIncomingMessage, Converter={StaticResource BackgroundConverter}}" Padding="0,12" Margin="12,0,12,0">
                 <StackPanel>
                     <TextBlock Foreground="{Binding IsIncomingMessage, Converter={StaticResource ForegroundConverter}}" Text="{Binding Message}" Style="{StaticResource PhoneTextNormalStyle}" TextWrapping="Wrap"/>
-                    <HyperlinkButton Foreground="{Binding IsIncomingMessage, Converter={StaticResource ForegroundConverter}}"  x:Name="viewUri" Content="{Binding Uri}" Visibility="{Binding Uri, Converter={StaticResource NullToVisibilityConverter}}" Click="UriOnClick" />
+                    <HyperlinkButton Foreground="{Binding IsIncomingMessage, Converter={StaticResource ForegroundConverter}}" x:Name="viewUri" Content="{Binding FileName}" Tag="{Binding Uri}" Visibility="{Binding Uri, Converter={StaticResource NullToVisibilityConverter}}" Click="UriOnClick" HorizontalContentAlignment="Stretch" />
                     <TextBlock Foreground="{Binding IsIncomingMessage, Converter={StaticResource ForegroundConverter}}" Text="{Binding Status}" Style="{StaticResource PhoneTextSmallStyle}" Opacity="0.65" HorizontalAlignment="Right" Visibility="{Binding Status, Converter={StaticResource NullToVisibilityConverter}}" />
                 </StackPanel>
             </Border>

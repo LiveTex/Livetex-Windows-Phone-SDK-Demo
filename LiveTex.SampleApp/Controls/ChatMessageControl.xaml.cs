@@ -1,14 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Navigation;
 using Windows.System;
-using LiveTex.SampleApp.Wrappers;
-using Microsoft.Phone.Controls;
-using Microsoft.Phone.Shell;
 
 namespace LiveTex.SampleApp.Controls
 {
@@ -22,7 +15,21 @@ namespace LiveTex.SampleApp.Controls
 
 		private void UriOnClick(object sender, RoutedEventArgs e)
 		{
-			Launcher.LaunchUriAsync(new Uri((string)viewUri.Content));
+			try
+			{
+				var uri = viewUri.Tag as string;
+
+				if(string.IsNullOrWhiteSpace(uri))
+				{
+					return;
+				}
+
+				Launcher.LaunchUriAsync(new Uri(uri));
+			}
+			catch(Exception)
+			{
+				MessageBox.Show("Не удалось открыть ссылку", "Ошибка", MessageBoxButton.OK);
+			}
 		}
 	}
 }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ComponentModel;
+using System.IO;
 using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Threading.Tasks;
@@ -65,7 +66,8 @@ namespace LiveTex.SampleApp.Wrappers
 			Message = fileMessage.Text;
 			TimeStamp = fileMessage.Timestamp;
 			IsIncomingMessage = true;
-			Uri = fileMessage.Url;
+
+			SetUri(fileMessage.Url);
 
 			Status = TimeStamp != null
 				? TimeStamp.Value.ToString("h:mm d MMM yyyy")
@@ -157,10 +159,10 @@ namespace LiveTex.SampleApp.Wrappers
 			}
 		}
 		
-		
 		public bool IsIncomingMessage { get; private set; }
 		public string Uri { get; private set; }
-
+		public string FileName{get;private set;}
+		
 		public ChatMessageType MessageType
 		{
 			get { return _messageType; }
@@ -180,6 +182,33 @@ namespace LiveTex.SampleApp.Wrappers
 		}
 
 		#endregion
+
+		private void SetUri(string uri)
+		{
+			if (string.IsNullOrWhiteSpace(uri))
+			{
+				Uri = null;
+				FileName = null;
+
+				return;
+			}
+
+			if(uri.StartsWith("//"))
+			{
+				uri = "http:" + uri;
+			}
+
+			Uri = uri;
+
+			try
+			{
+				FileName = Path.GetFileName(Uri);
+			}
+			catch
+			{
+				FileName = Uri;
+			}
+		}
 
 		public void SetMassageID(string messageID)
 		{
