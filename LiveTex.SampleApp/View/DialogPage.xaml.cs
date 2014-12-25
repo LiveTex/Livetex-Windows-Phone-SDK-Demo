@@ -28,6 +28,7 @@ namespace LiveTex.SampleApp
 			base.OnNavigatedTo(e);
 
 			ViewModel.Messages.CollectionChanged += MessagesCollectionChanged;
+			ViewModel.PropertyChanged += ViewModelPropertyChanged;
 			ViewModel.NavigatedTo();
 		}
 
@@ -36,6 +37,7 @@ namespace LiveTex.SampleApp
 			base.OnNavigatedFrom(e);
 
 			ViewModel.Messages.CollectionChanged -= MessagesCollectionChanged;
+			ViewModel.PropertyChanged -= ViewModelPropertyChanged;
 			ViewModel.NavigatedFrom();
 		}
 
@@ -52,6 +54,14 @@ namespace LiveTex.SampleApp
 			if(e.Action == NotifyCollectionChangedAction.Add)
 			{
 				viewMessagesList.ScrollIntoView(e.NewItems[0]);
+			}
+		}
+
+		private void ViewModelPropertyChanged(object sender, PropertyChangedEventArgs e)
+		{
+			if (viewAbuseMenuItem != null && ViewModel != null)
+			{
+				viewAbuseMenuItem.IsEnabled = ViewModel.IsAbuseAllowed;
 			}
 		}
 		

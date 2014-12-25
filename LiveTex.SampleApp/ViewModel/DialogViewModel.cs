@@ -44,7 +44,6 @@ namespace LiveTex.SampleApp.ViewModel
 		}
 
 		private string _messageText;
-
 		public string MessageText
 		{
 			get { return _messageText; }
@@ -62,6 +61,13 @@ namespace LiveTex.SampleApp.ViewModel
 		{
 			get { return _conversationActive; }
 			private set { SetValue(ref _conversationActive, value); }
+		}
+
+		private bool _isAbuseAllowed;
+		public bool IsAbuseAllowed
+		{
+			get { return _isAbuseAllowed; }
+			private set { SetValue(ref _isAbuseAllowed, value); }
 		}
 
 		#endregion
@@ -341,6 +347,7 @@ namespace LiveTex.SampleApp.ViewModel
 		private async Task HandleDialogState(DialogState dialogState)
 		{
 			ConversationActive = dialogState.State == DialogStates.ConversationActive;
+			IsAbuseAllowed = dialogState.Employee != null;
 
 			if(dialogState.Conversation == null)
 			{

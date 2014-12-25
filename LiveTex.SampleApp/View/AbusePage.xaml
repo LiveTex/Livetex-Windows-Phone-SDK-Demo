@@ -27,6 +27,9 @@
 
         <Grid x:Name="ContentPanel" Grid.Row="1" Margin="12,0,12,0">
             <StackPanel>
+                <TextBlock Text="Контактные данные" Style="{StaticResource LiveTexLabelTextStyle}" />
+                <TextBox Text="{Binding Contact, Mode=TwoWay}" IsEnabled="{Binding ConversationActive}" />
+
                 <TextBlock Text="Напишите сообщение" Style="{StaticResource LiveTexLabelTextStyle}" />
                 <TextBox Text="{Binding Message, Mode=TwoWay}" IsEnabled="{Binding ConversationActive}" Height="168" />
 

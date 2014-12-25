@@ -43,6 +43,19 @@ namespace LiveTex.SampleApp.ViewModel
 			}
 		}
 
+		private string _contact;
+		public string Contact
+		{
+			get { return _contact; }
+			set
+			{
+				if (SetValue(ref _contact, value))
+				{
+					AbuseCommand.RiseCanExecuteChanged();
+				}
+			}
+		}
+
 		#endregion
 
 		private DelegateCommand _abuseCommand;
@@ -61,12 +74,18 @@ namespace LiveTex.SampleApp.ViewModel
 
 		private bool IsAbuseAllowed()
 		{
-			return !string.IsNullOrWhiteSpace(Message);
+			return !string.IsNullOrWhiteSpace(Message)
+				&& !string.IsNullOrWhiteSpace(Contact);
 		}
 
 		private async void Abuse()
 		{
-			var result = await WrapRequest(() => Client.AbuseAsync(new Abuse { Contact = "", Message = Message }));
+			if(IsAbuseAllowed())
+			{
+				return;
+			}
+
+			var result = await WrapRequest(() => Client.AbuseAsync(new Abuse { Contact = Contact, Message = Message }));
 			if(result)
 			{
 				App.RootFrame.GoBack();
