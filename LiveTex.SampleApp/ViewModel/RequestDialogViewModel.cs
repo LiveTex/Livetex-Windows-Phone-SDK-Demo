@@ -145,7 +145,7 @@ namespace LiveTex.SampleApp.ViewModel
 
 			if (departments != null)
 			{
-				result.AddRange(departments.Select(d => new ListItemWrapper<Department>(d, d.Name)));
+				result.AddRange(departments.Where(d=>!string.Equals(d.Name, "default", StringComparison.OrdinalIgnoreCase)).Select(d => new ListItemWrapper<Department>(d, d.Name)));
 			}
 
 			Departments = result;
