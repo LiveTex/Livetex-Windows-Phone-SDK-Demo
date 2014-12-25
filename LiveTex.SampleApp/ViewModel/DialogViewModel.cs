@@ -109,7 +109,7 @@ namespace LiveTex.SampleApp.ViewModel
 			{
 				if(_voteUpCommand == null)
 				{
-					_voteUpCommand = new DelegateCommand(VoteUp, () => ConversationActive);
+					_voteUpCommand = new DelegateCommand(VoteUp, () => IsAbuseAllowed);
 				}
 
 				return _voteUpCommand;
@@ -123,7 +123,7 @@ namespace LiveTex.SampleApp.ViewModel
 			{
 				if(_voteDownCommand == null)
 				{
-					_voteDownCommand = new DelegateCommand(VoteDown, () => ConversationActive);
+					_voteDownCommand = new DelegateCommand(VoteDown, () => IsAbuseAllowed);
 				}
 
 				return _voteDownCommand;
@@ -137,7 +137,7 @@ namespace LiveTex.SampleApp.ViewModel
 			{
 				if(_abuseCommand == null)
 				{
-					_abuseCommand = new DelegateCommand(Abuse, () => ConversationActive);
+					_abuseCommand = new DelegateCommand(Abuse, () => IsAbuseAllowed);
 				}
 
 				return _abuseCommand;

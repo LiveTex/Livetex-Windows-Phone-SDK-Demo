@@ -19,6 +19,8 @@ namespace LiveTex.SampleApp
 			InitializeComponent();
 
 			DataContext = new DialogViewModel();
+
+			Loaded += UpdateAbuseMenuItemOnLoad;
 		}
 
 		#region Attached properties
@@ -55,7 +57,6 @@ namespace LiveTex.SampleApp
 		{
 			if (AbuseMenuItem == null)
 			{
-				Loaded += UpdateAbuseMenuItemOnLoad;
 				return;
 			}
 

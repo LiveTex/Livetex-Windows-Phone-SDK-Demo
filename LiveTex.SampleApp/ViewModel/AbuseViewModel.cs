@@ -85,7 +85,7 @@ namespace LiveTex.SampleApp.ViewModel
 
 		private async void Abuse()
 		{
-			if(IsAbuseAllowed())
+			if(!IsAbuseAllowed())
 			{
 				return;
 			}

@@ -205,9 +205,9 @@
 
             <TextBlock Text="ОЦЕНИТЕ КОНСУЛЬТАЦИЮ" Foreground="DimGray" Style="{StaticResource PhoneTextNormalStyle}" Margin="12, 12"/>
 
-            <TextBlock Grid.Column="1" Text="&#xe19f;" Padding="12" FontFamily="Segoe UI Symbol" Foreground="{Binding ConversationActive, Converter={StaticResource GreenToGrayConverter}}" VerticalAlignment="Center" HorizontalAlignment="Center" Tap="GoodButtonTap" />
+            <TextBlock Grid.Column="1" Text="&#xe19f;" Padding="12" FontFamily="Segoe UI Symbol" Foreground="{Binding IsAbuseAllowed, Converter={StaticResource GreenToGrayConverter}}" VerticalAlignment="Center" HorizontalAlignment="Center" Tap="GoodButtonTap" />
             <Grid Grid.Column="2" Width="2" Background="DimGray" Margin="0,6" />
-            <TextBlock Grid.Column="3" Text="&#xe19e;" Padding="12" FontFamily="Segoe UI Symbol" Foreground="{Binding ConversationActive, Converter={StaticResource RedToGrayConverter}}" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="0,0,12,0" Tap="BadButtonTap" />
+            <TextBlock Grid.Column="3" Text="&#xe19e;" Padding="12" FontFamily="Segoe UI Symbol" Foreground="{Binding IsAbuseAllowed, Converter={StaticResource RedToGrayConverter}}" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="0,0,12,0" Tap="BadButtonTap" />
         </Grid>
 
         <Grid x:Name="ContentPanel" Grid.Row="2" Margin="12,0,12,0">
