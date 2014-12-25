@@ -44,14 +44,31 @@ namespace LiveTex.SampleApp.ViewModel
 		public List<ListItemWrapper<Department>> Departments
 		{
 			get { return _departments; }
-			private set { SetValue(ref _departments, value); }
+			private set
+			{
+				if (SetValue(ref _departments, value))
+				{
+					Department = _departments.First();
+				}
+			}
 		}
 
 		private ListItemWrapper<Department> _department;
 		public ListItemWrapper<Department> Department
 		{
 			get { return _department; }
-			set { SetDepartment(value); }
+			set
+			{
+				SetValue(ref _department, value);
+				IsEmployeeSelectionAllowed = _department == null || _department.SourceObject == null;
+			}
+		}
+
+		private bool _isDepartmentSelectionAllowed;
+		public bool IsDepartmentSelectionAllowed
+		{
+			get { return _isDepartmentSelectionAllowed; }
+			private set { SetValue(ref _isDepartmentSelectionAllowed, value); }
 		}
 
 		private List<ListItemWrapper<Employee>> _employees;
@@ -71,7 +88,18 @@ namespace LiveTex.SampleApp.ViewModel
 		public ListItemWrapper<Employee> Employee
 		{
 			get { return _employee; }
-			set { SetValue(ref _employee, value); }
+			set
+			{
+				SetValue(ref _employee, value);
+				IsDepartmentSelectionAllowed = _employee == null || _employee.SourceObject == null;
+			}
+		}
+
+		private bool _isEmployeeSelectionAllowed;
+		public bool IsEmployeeSelectionAllowed
+		{
+			get { return _isEmployeeSelectionAllowed; }
+			private set { SetValue(ref _isEmployeeSelectionAllowed, value); }
 		}
 
 		#region Commands
@@ -156,21 +184,6 @@ namespace LiveTex.SampleApp.ViewModel
 			Employees = result;
 		}
 		
-		private async Task SetDepartment(ListItemWrapper<Department> value)
-		{
-			if (SetValue(ref _department, value, "Department"))
-			{
-				await WrapRequest(async () =>
-				{
-					var newDepartmentID = value == null || value.SourceObject == null
-						? null
-						: value.SourceObject.Id;
-
-					await RefreshEmployees(newDepartmentID);
-				});
-			}
-		}
-
 		protected override string GetErrorMessage(Exception ex)
 		{
 			if (string.Equals(ex.Message, "Unable to select chat member.", StringComparison.OrdinalIgnoreCase))
