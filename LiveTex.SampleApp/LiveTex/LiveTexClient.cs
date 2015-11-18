@@ -8,31 +8,24 @@ namespace LiveTex.SampleApp.LiveTex
 {
 	internal static class LiveTexClient
 	{
-		private static ILiveTexClient _client;
-		
 		public static async Task Initialize(string key, string applicationID, string authServerUri)
 		{
-			if(_client != null)
+			if(Client != null)
 			{
-				_client.Dispose();
-				_client = null;
+				Client.Dispose();
+				Client = null;
 			}
 
 			var factory = new LiveTexClientFactory(key, applicationID, new Uri(authServerUri));
-			_client = await factory.CreateAsync(Token, Capabilities.Chat, Capabilities.FilesReceive, Capabilities.Invitation);
+			Client = await factory.CreateAsync(Token, Capabilities.Chat, Capabilities.FilesReceive, Capabilities.Invitation, Capabilities.Offline);
 
-			Token = _client.GetToken();
+			Token = Client.GetToken();
 		}
 
-		public static ILiveTexClient Client
-		{
-			get
-			{
-				return _client;
-			}
-		}
+		public static ILiveTexClient Client { get; private set; }
 
 		public static string Message { get; set; }
+		public static string OfflineMessage { get; set; }
 
 		public static void RemoveToken()
 		{

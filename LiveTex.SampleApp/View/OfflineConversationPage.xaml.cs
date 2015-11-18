@@ -3,7 +3,6 @@ using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Linq;
 using System.Windows;
-using System.Windows.Input;
 using System.Windows.Navigation;
 using LiveTex.SampleApp.ViewModel;
 using Microsoft.Phone.Controls;
@@ -11,14 +10,14 @@ using Microsoft.Phone.Shell;
 
 namespace LiveTex.SampleApp
 {
-	public partial class DialogPage
+	public partial class OfflineConversationPage
 		: PhoneApplicationPage
 	{
-		public DialogPage()
+		public OfflineConversationPage()
 		{
 			InitializeComponent();
 
-			DataContext = new DialogViewModel();
+			DataContext = new OfflineConversationViewModel();
 
 			Loaded += UpdateAbuseMenuItemOnLoad;
 		}
@@ -40,8 +39,8 @@ namespace LiveTex.SampleApp
 
 		private static void OnIsAbuseMenuVisibleChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
 		{
-			var page = d as DialogPage;
-
+			var page = d as OfflineConversationPage;
+			
 			if (page == null)
 			{
 				return;
@@ -96,17 +95,17 @@ namespace LiveTex.SampleApp
 			}
 		}
 
-		private DialogViewModel ViewModel
-		{
-			get { return (DialogViewModel)DataContext; }
-		}
+		private OfflineConversationViewModel ViewModel => (OfflineConversationViewModel)DataContext;
 
 		protected override void OnNavigatedTo(NavigationEventArgs e)
 		{
 			base.OnNavigatedTo(e);
 
+			string conversationID;
+			NavigationContext.QueryString.TryGetValue("id", out conversationID);
+
 			ViewModel.Messages.CollectionChanged += MessagesCollectionChanged;
-			ViewModel.NavigatedTo().LogAsyncError();
+			ViewModel.NavigatedTo(conversationID).LogAsyncError();
 		}
 
 		protected override void OnNavigatedFrom(NavigationEventArgs e)
@@ -119,7 +118,7 @@ namespace LiveTex.SampleApp
 
 		protected override void OnBackKeyPress(CancelEventArgs e)
 		{
-			ViewModel.CloseDialogCommand.Execute(null);
+			ViewModel.CloseDialogCommand.ExecuteSafe();
 
 			e.Cancel = true;
 			base.OnBackKeyPress(e);
@@ -146,29 +145,24 @@ namespace LiveTex.SampleApp
 			Focus();
 		}
 
-		private void SendFileClick(object sender, EventArgs e)
-		{
-			ViewModel.SendFileCommand.ExecuteSafe();
-		}
-
 		private void AbuseClick(object sender, EventArgs e)
 		{
-			ViewModel.AbuseCommand.Execute(null);
+			ViewModel.AbuseCommand.ExecuteSafe();
 		}
 
 		private void CloseDialogClick(object sender, EventArgs e)
 		{
-			ViewModel.CloseDialogCommand.Execute(null);
+			ViewModel.CloseDialogCommand.ExecuteSafe();
 		}
 
 		private void GoodButtonTap(object sender, System.Windows.Input.GestureEventArgs e)
 		{
-			ViewModel.VoteUpCommand.Execute(null);
+			ViewModel.VoteUpCommand.ExecuteSafe();
 		}
 
 		private void BadButtonTap(object sender, System.Windows.Input.GestureEventArgs e)
 		{
-			ViewModel.VoteDownCommand.Execute(null);
+			ViewModel.VoteDownCommand.ExecuteSafe();
 		}
 	}
 }

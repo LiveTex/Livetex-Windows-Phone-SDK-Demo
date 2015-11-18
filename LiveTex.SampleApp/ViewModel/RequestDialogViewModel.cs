@@ -5,7 +5,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
 using LiveTex.SampleApp.Wrappers;
-using LiveTex.SDK;
 using LiveTex.SDK.Client;
 using LiveTex.SDK.Sample;
 
@@ -14,7 +13,7 @@ namespace LiveTex.SampleApp.ViewModel
 	public class RequestDialogViewModel
 		: ViewModel
 	{
-		protected override async Task Initialize()
+		protected override async Task Initialize(object parameter)
 		{
 			await WrapRequest(() => Task.WhenAll(RefreshDepartments(), RefreshEmployees(null)));
 		}
@@ -44,13 +43,7 @@ namespace LiveTex.SampleApp.ViewModel
 		public List<ListItemWrapper<Department>> Departments
 		{
 			get { return _departments; }
-			private set
-			{
-				if (SetValue(ref _departments, value))
-				{
-					Department = _departments.First();
-				}
-			}
+			private set { SetValue(ref _departments, value, () => Department = _departments.First()); }
 		}
 
 		private ListItemWrapper<Department> _department;
@@ -60,7 +53,7 @@ namespace LiveTex.SampleApp.ViewModel
 			set
 			{
 				SetValue(ref _department, value);
-				IsEmployeeSelectionAllowed = _department == null || _department.SourceObject == null;
+				IsEmployeeSelectionAllowed = _department?.SourceObject == null;
 			}
 		}
 
@@ -75,13 +68,7 @@ namespace LiveTex.SampleApp.ViewModel
 		public List<ListItemWrapper<Employee>> Employees
 		{
 			get { return _employees; }
-			private set
-			{
-				if(SetValue(ref _employees, value))
-				{
-					Employee = _employees.First();
-				}
-			}
+			private set { SetValue(ref _employees, value, () => Employee = _employees.First()); }
 		}
 
 		private ListItemWrapper<Employee> _employee;
@@ -91,7 +78,7 @@ namespace LiveTex.SampleApp.ViewModel
 			set
 			{
 				SetValue(ref _employee, value);
-				IsDepartmentSelectionAllowed = _employee == null || _employee.SourceObject == null;
+				IsDepartmentSelectionAllowed = _employee?.SourceObject == null;
 			}
 		}
 
@@ -104,19 +91,8 @@ namespace LiveTex.SampleApp.ViewModel
 
 		#region Commands
 
-		private DelegateCommand _requestDialogCommand;
- 		public DelegateCommand RequestDialogCommand
-		{
-			get
-			{
-				if(_requestDialogCommand == null)
-				{
-					_requestDialogCommand = new DelegateCommand(() => RequestDialog());
-				}
-
-				return _requestDialogCommand;
-			}
-		}
+		private AsyncCommand _requestDialogCommand;
+		public AsyncCommand RequestDialogCommand => GetAsyncCommand(ref _requestDialogCommand, RequestDialog);
 
 		#endregion
 
@@ -233,13 +209,8 @@ namespace LiveTex.SampleApp.ViewModel
 				attributes.Visible["Имя пользователя"] = UserName;
 			}
 
-			var departmentID = Department == null || Department.SourceObject == null
-				? null
-				: Department.SourceObject.Id;
-
-			var employeeID = Employee == null || Employee.SourceObject == null
-				? null
-				: Employee.SourceObject.EmployeeId;
+			var departmentID = Department?.SourceObject?.Id;
+			var employeeID = Employee?.SourceObject?.EmployeeId;
 
 			Task task;
 

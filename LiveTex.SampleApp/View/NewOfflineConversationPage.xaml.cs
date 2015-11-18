@@ -5,20 +5,17 @@ using Microsoft.Phone.Controls;
 
 namespace LiveTex.SampleApp
 {
-	public partial class RequestDialogPage
+	public partial class NewOfflineConversationPage
 		: PhoneApplicationPage
 	{
-		public RequestDialogPage()
+		public NewOfflineConversationPage()
 		{
 			InitializeComponent();
 
-			DataContext = new RequestDialogViewModel();
+			DataContext = new NewOfflineConversationViewModel();
 		}
 
-		private RequestDialogViewModel ViewModel
-		{
-			get { return (RequestDialogViewModel)DataContext; }
-		}
+		private NewOfflineConversationViewModel ViewModel => (NewOfflineConversationViewModel)DataContext;
 
 		protected override void OnNavigatedTo(NavigationEventArgs e)
 		{
@@ -32,7 +29,7 @@ namespace LiveTex.SampleApp
 			base.OnNavigatedFrom(e);
 
 			if(e.NavigationMode == NavigationMode.New
-				&& e.Uri.OriginalString.Contains("DialogPage.xaml")
+				&& e.Uri.OriginalString.Contains("OfflineConversationPage.xaml")
 				&& e.IsNavigationInitiator)
 			{
 				NavigationService.RemoveBackEntry();

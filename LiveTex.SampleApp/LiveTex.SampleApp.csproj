@@ -102,18 +102,41 @@
     <Compile Include="Converters\ListItemWrapperConverter.cs" />
     <Compile Include="Converters\MessageDirectionToMarginConverter.cs" />
     <Compile Include="Converters\NullToVisibilityConverter.cs" />
+    <Compile Include="Converters\UpdateTimeConverter.cs" />
+    <Compile Include="Helpers\CommonExtensions.cs" />
+    <Compile Include="Helpers\DisposeAction.cs" />
+    <Compile Include="Helpers\Guard.cs" />
     <Compile Include="Helpers\TextBoxHelper.cs" />
     <Compile Include="Helpers\VisualTreeHelperEx.cs" />
     <Compile Include="ViewModel\AbuseViewModel.cs" />
+    <Compile Include="ViewModel\Common\AsyncCommand.cs" />
+    <Compile Include="ViewModel\Common\CommandBase.cs" />
+    <Compile Include="ViewModel\Common\ICommandEx.cs" />
+    <Compile Include="ViewModel\OfflineConversationViewModel.cs" />
     <Compile Include="ViewModel\MainViewModel.cs" />
+    <Compile Include="ViewModel\OfflineConversationsViewModel.cs" />
+    <Compile Include="ViewModel\NewOfflineConversationViewModel.cs" />
+    <Compile Include="ViewModel\SelectServiceViewModel.cs" />
     <Compile Include="ViewModel\RequestDialogViewModel.cs" />
     <Compile Include="View\AbusePage.xaml.cs">
       <DependentUpon>AbusePage.xaml</DependentUpon>
     </Compile>
+    <Compile Include="View\OfflineConversationPage.xaml.cs">
+      <DependentUpon>OfflineConversationPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\OfflineConversationsPage.xaml.cs">
+      <DependentUpon>OfflineConversationsPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\NewOfflineConversationPage.xaml.cs">
+      <DependentUpon>NewOfflineConversationPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\SelectServicePage.xaml.cs">
+      <DependentUpon>SelectServicePage.xaml</DependentUpon>
+    </Compile>
     <Compile Include="View\RequestDialogPage.xaml.cs">
       <DependentUpon>RequestDialogPage.xaml</DependentUpon>
     </Compile>
-    <Compile Include="ViewModel\DelegateCommand.cs" />
+    <Compile Include="ViewModel\Common\DelegateCommand.cs" />
     <Compile Include="ViewModel\DialogViewModel.cs" />
     <Compile Include="ViewModel\ViewModel.cs" />
     <Compile Include="View\DialogPage.xaml.cs">
@@ -148,6 +171,22 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
+    <Page Include="View\OfflineConversationPage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="View\OfflineConversationsPage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="View\NewOfflineConversationPage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="View\SelectServicePage.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="View\RequestDialogPage.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -172,10 +211,12 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Assets\AlignmentGrid.png" />
+    <Content Include="Assets\AppBar\add.png" />
     <Content Include="Assets\AppBar\check.png" />
     <Content Include="Assets\AppBar\Send.png" />
     <Content Include="Assets\AppBar\Down.png" />
     <Content Include="Assets\AppBar\Up.png" />
+    <Content Include="Assets\AppBar\upload.png" />
     <Content Include="Assets\ApplicationIcon.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -207,10 +248,6 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-    <Reference Include="LiveTex.SDK, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\LiveTex.SDK.1.0.3.3\lib\windowsphone8\LiveTex.SDK.dll</HintPath>
-    </Reference>
     <Reference Include="LiveTex.Thrift, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\LiveTex.SDK.1.0.3.3\lib\windowsphone8\LiveTex.Thrift.dll</HintPath>
@@ -230,7 +267,12 @@
       <HintPath>..\packages\Microsoft.Net.Http.2.2.28\lib\sl4-windowsphone71\System.Net.Http.Primitives.dll</HintPath>
     </Reference>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <ProjectReference Include="..\..\Livetex-Windows-Phone-SDK\LiveTex.SDK\LiveTex.SDK.csproj">
+      <Project>{93aabc77-7b8b-4fc7-bdf9-5f2a48a8a439}</Project>
+      <Name>LiveTex.SDK</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\$(TargetFrameworkIdentifier)\$(TargetFrameworkVersion)\Microsoft.$(TargetFrameworkIdentifier).$(TargetFrameworkVersion).Overrides.targets" />
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\$(TargetFrameworkIdentifier)\$(TargetFrameworkVersion)\Microsoft.$(TargetFrameworkIdentifier).CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it.

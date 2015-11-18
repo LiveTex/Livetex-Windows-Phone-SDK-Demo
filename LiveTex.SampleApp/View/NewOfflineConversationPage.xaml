@@ -1,0 +1,64 @@
+﻿<phone:PhoneApplicationPage
+    x:Class="LiveTex.SampleApp.NewOfflineConversationPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:phone="clr-namespace:Microsoft.Phone.Controls;assembly=Microsoft.Phone"
+    xmlns:shell="clr-namespace:Microsoft.Phone.Shell;assembly=Microsoft.Phone"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:toolkit="clr-namespace:Microsoft.Phone.Controls;assembly=Microsoft.Phone.Controls.Toolkit"
+    xmlns:converters="clr-namespace:LiveTex.SampleApp.Converters"
+    xmlns:viewModel="clr-namespace:LiveTex.SampleApp.ViewModel"
+    FontFamily="{StaticResource PhoneFontFamilyNormal}"
+    FontSize="{StaticResource PhoneFontSizeNormal}"
+    Foreground="{StaticResource PhoneForegroundBrush}"
+    SupportedOrientations="Portrait" Orientation="Portrait"
+    mc:Ignorable="d"
+    shell:SystemTray.IsVisible="True"
+    shell:SystemTray.BackgroundColor="White"
+	d:DataContext="{d:DesignInstance viewModel:NewOfflineConversationViewModel}">
+
+    <Grid x:Name="LayoutRoot" Background="White">
+		<Grid.RowDefinitions>
+			<RowDefinition Height="Auto"/>
+			<RowDefinition Height="*"/>
+		</Grid.RowDefinitions>
+
+		<StackPanel x:Name="TitlePanel" Grid.Row="0" Margin="12,17,0,28">
+			<TextBlock Text="LIVETEX" Foreground="{StaticResource LiveTexBlueBrush}" Style="{StaticResource PhoneTextNormalStyle}" Margin="12,0"/>
+			<TextBlock Text="новое обращение" Foreground="{StaticResource LiveTexBlueBrush}" Margin="9,-7,0,0" Style="{StaticResource PhoneTextTitle1Style}"/>
+		</StackPanel>
+
+		<Grid x:Name="ContentPanel" Grid.Row="1" Margin="12,0,12,0">
+			<ScrollViewer>
+				<StackPanel>
+					<TextBlock Text="Имя" Style="{StaticResource LiveTexLabelTextStyle}" />
+					<TextBox Text="{Binding UserName, Mode=TwoWay}" />
+
+					<TextBlock Text="Email" Style="{StaticResource LiveTexLabelTextStyle}" />
+					<TextBox Text="{Binding UserEmail, Mode=TwoWay}" />
+				
+					<TextBlock Text="Телефон" Style="{StaticResource LiveTexLabelTextStyle}" />
+					<TextBox Text="{Binding UserPhone, Mode=TwoWay}" />
+
+					<TextBlock Text="Выберите отдел" Style="{StaticResource LiveTexLabelTextStyle}" FontFamily="Portable User Interface" />
+					<toolkit:ListPicker ItemsSource="{Binding Departments}" SelectedItem="{Binding Department, Mode=TwoWay}" />
+                    
+					<TextBlock Text="Напишите сообщение" Style="{StaticResource LiveTexLabelTextStyle}" />
+					<TextBox Text="{Binding Message, Mode=TwoWay}" Height="168" AcceptsReturn="True" />
+
+					<Button Content="Отправить" Margin="0" HorizontalAlignment="Left" Command="{Binding CreateOfflineConversationCommand}" Padding="24,5,24,6"/>
+				</StackPanel>
+			</ScrollViewer>
+		</Grid>
+
+        <Grid
+			Grid.Row="0"
+			Grid.RowSpan="2"
+			Visibility="{Binding IsBusy, Converter={StaticResource BoolToVisibilityConverter}}" d:IsHidden="True">
+            <Border Background="White" Opacity="0.75"/>
+            <TextBlock Foreground="Black" Text="Загрузка..." HorizontalAlignment="Center" VerticalAlignment="Center" />
+        </Grid>
+    </Grid>
+
+</phone:PhoneApplicationPage>

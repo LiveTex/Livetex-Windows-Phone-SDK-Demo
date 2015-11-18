@@ -13,7 +13,7 @@ namespace LiveTex.SampleApp.ViewModel
 		private const string cAppIDKey = "ApplicationID";
 		private const string cAuthUriKey = "AuthenticatedUriKey";
 
-		protected override Task Initialize()
+		protected override Task Initialize(object parameter)
 		{
 			Key = Storage.GetValue(cKeyKey, Config.cKey);
 			AppID = Storage.GetValue(cAppIDKey, Config.cApplicationID);
@@ -44,32 +44,10 @@ namespace LiveTex.SampleApp.ViewModel
 		}
 
 		private DelegateCommand _removeTokenCommand;
-		public DelegateCommand RemoveTokenCommand
-		{
-			get
-			{
-				if (_removeTokenCommand == null)
-				{
-					_removeTokenCommand = new DelegateCommand(LiveTexClient.RemoveToken);
-				}
+		public DelegateCommand RemoveTokenCommand => GetCommand(ref _removeTokenCommand, LiveTexClient.RemoveToken);
 
-				return _removeTokenCommand;
-			}
-		}
-
-		private DelegateCommand _initializeClientCommand;
-		public DelegateCommand InitializeClientCommand
-		{
-			get
-			{
-				if(_initializeClientCommand == null)
-				{
-					_initializeClientCommand = new DelegateCommand(() => InitializeClient());
-				}
-
-				return _initializeClientCommand;
-			}
-		}
+		private AsyncCommand _initializeClientCommand;
+		public AsyncCommand InitializeClientCommand => GetAsyncCommand(ref _initializeClientCommand, InitializeClient);
 
 		private async Task InitializeClient()
 		{
@@ -103,16 +81,7 @@ namespace LiveTex.SampleApp.ViewModel
 
 					await LiveTexClient.Initialize(Key, AppID, AuthUri);
 
-					var dialogState = await LiveTexClient.Client.GetDialogStateAsync();
-
-					if (dialogState.State == DialogStates.NoConversation)
-					{
-						App.RootFrame.Navigate(new Uri("/View/RequestDialogPage.xaml", UriKind.Relative));
-					}
-					else
-					{
-						App.RootFrame.Navigate(new Uri("/View/DialogPage.xaml", UriKind.Relative));
-					}
+					App.RootFrame.Navigate(new Uri("/View/SelectServicePage.xaml", UriKind.Relative));
 				});
 		}
 	}

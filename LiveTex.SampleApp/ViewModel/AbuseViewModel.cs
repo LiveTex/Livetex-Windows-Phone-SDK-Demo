@@ -102,7 +102,7 @@ namespace LiveTex.SampleApp.ViewModel
 			await WrapRequest(async () =>
 			{
 				var dialogState = await Client.GetDialogStateAsync();
-				await HandleDialogState(dialogState);
+				HandleDialogState(dialogState);
 			});
 
 			await base.OnNavigatedTo();
@@ -121,7 +121,7 @@ namespace LiveTex.SampleApp.ViewModel
 			return base.OnNavigatedForm();
 		}
 
-		private async Task HandleDialogState(DialogState dialogState)
+		private void HandleDialogState(DialogState dialogState)
 		{
 			ConversationActive = dialogState.State == DialogStates.ConversationActive;
 			
@@ -169,6 +169,10 @@ namespace LiveTex.SampleApp.ViewModel
 		}
 
 		void ILiveTexEventsHandler.ReceiveTypingMessage(TypingMessage message)
+		{
+		}
+
+		public void ReceiveOfflineMessage(OfflineMessage message)
 		{
 		}
 	}

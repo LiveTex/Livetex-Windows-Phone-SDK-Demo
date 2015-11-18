@@ -4,11 +4,13 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
+using Windows.Storage.Pickers;
 using LiveTex.SampleApp.LiveTex;
 using LiveTex.SampleApp.Wrappers;
 using LiveTex.SDK;
 using LiveTex.SDK.Client;
 using LiveTex.SDK.Sample;
+using Microsoft.Phone.Tasks;
 
 namespace LiveTex.SampleApp.ViewModel
 {
@@ -47,13 +49,7 @@ namespace LiveTex.SampleApp.ViewModel
 		public string MessageText
 		{
 			get { return _messageText; }
-			set
-			{
-				if (SetValue(ref _messageText, value))
-				{
-					SendTypingMessage();
-				}
-			}
+			set { SetValue(ref _messageText, value, () => SendTypingMessage().LogAsyncError()); }
 		}
 
 		private bool _conversationActive;
@@ -74,75 +70,23 @@ namespace LiveTex.SampleApp.ViewModel
 
 		#region Model commands
 
-		private DelegateCommand _sendMessageCommand;
-		public DelegateCommand SendMessageCommand
-		{
-			get
-			{
-				if(_sendMessageCommand == null)
-				{
-					_sendMessageCommand = new DelegateCommand(() => SendMessage(), () => !IsBusy);
-				}
+		private AsyncCommand _sendMessageCommand;
+		public AsyncCommand SendMessageCommand => GetAsyncCommand(ref _sendMessageCommand, SendMessage);
 
-				return _sendMessageCommand;
-			}
-		}
+		private DelegateCommand _sendFileCommand;
+		public DelegateCommand SendFileCommand => GetCommand(ref _sendFileCommand, SendFile);
 
 		private DelegateCommand _closeDialogCommand;
-		public DelegateCommand CloseDialogCommand
-		{
-			get
-			{
-				if(_closeDialogCommand == null)
-				{
-					_closeDialogCommand = new DelegateCommand(CloseDialog);
-				}
+		public DelegateCommand CloseDialogCommand => GetCommand(ref _closeDialogCommand, CloseDialog);
 
-				return _closeDialogCommand;
-			}
-		}
+		private AsyncCommand _voteUpCommand;
+		public AsyncCommand VoteUpCommand => GetAsyncCommand(ref _voteUpCommand, VoteUp, () => IsAbuseAllowed);
 
-		private DelegateCommand _voteUpCommand;
-		public DelegateCommand VoteUpCommand
-		{
-			get
-			{
-				if(_voteUpCommand == null)
-				{
-					_voteUpCommand = new DelegateCommand(VoteUp, () => IsAbuseAllowed);
-				}
-
-				return _voteUpCommand;
-			}
-		}
-
-		private DelegateCommand _voteDownCommand;
-		public DelegateCommand VoteDownCommand
-		{
-			get
-			{
-				if(_voteDownCommand == null)
-				{
-					_voteDownCommand = new DelegateCommand(VoteDown, () => IsAbuseAllowed);
-				}
-
-				return _voteDownCommand;
-			}
-		}
+		private AsyncCommand _voteDownCommand;
+		public AsyncCommand VoteDownCommand => GetAsyncCommand(ref _voteDownCommand, VoteDown, () => IsAbuseAllowed);
 
 		private DelegateCommand _abuseCommand;
-		public DelegateCommand AbuseCommand
-		{
-			get
-			{
-				if(_abuseCommand == null)
-				{
-					_abuseCommand = new DelegateCommand(Abuse, () => IsAbuseAllowed);
-				}
-
-				return _abuseCommand;
-			}
-		}
+		public DelegateCommand AbuseCommand => GetCommand(ref _abuseCommand, Abuse, () => IsAbuseAllowed);
 
 		#endregion
 
@@ -169,13 +113,15 @@ namespace LiveTex.SampleApp.ViewModel
 					break;
 				}
 
+				if(messages == null
+				   || messages.Count == 0)
+				{
+					break;
+				}
+
 				if(lastMessage == null)
 				{
 					newMessages.AddRange(messages);
-
-					// Should be removed when offset bug is fixed
-					break;
-
 					continue;
 				}
 
@@ -201,9 +147,6 @@ namespace LiveTex.SampleApp.ViewModel
 				{
 					break;
 				}
-
-				// Should be removed when offset bug is fixed
-				break;
 			}
 
 			newMessages.Reverse();
@@ -218,7 +161,7 @@ namespace LiveTex.SampleApp.ViewModel
 			await WrapRequest(async () =>
 			{
 				var dialogState = await Client.GetDialogStateAsync();
-				await HandleDialogState(dialogState);
+				HandleDialogState(dialogState);
 
 				if(dialogState.State != DialogStates.NoConversation
 					&& !string.IsNullOrWhiteSpace(LiveTexClient.Message))
@@ -255,22 +198,23 @@ namespace LiveTex.SampleApp.ViewModel
 
 		private async Task SendTypingMessage()
 		{
-			var current = Interlocked.Exchange(ref _typingMessageInProgress, 1);
-			if(current == 1)
+			if(_typingMessageInProgress == 1)
 			{
 				return;
 			}
 
+			_typingMessageInProgress = 1;
+
 			await Task.Delay(1000);
 
-			if(Volatile.Read(ref _typingMessageInProgress) != 1)
+			if(_typingMessageInProgress != 1)
 			{
 				return;
 			}
 
 			await WrapRequest(() => Client.TypingMessageAsync(new TypingMessage { Text = MessageText }), false);
 			
-			Volatile.Write(ref _typingMessageInProgress, 0);
+			_typingMessageInProgress = 0;
 		}
 
 		private async Task SendMessage()
@@ -283,7 +227,7 @@ namespace LiveTex.SampleApp.ViewModel
 
 		private async Task SendMessage(string message)
 		{
-			Volatile.Write(ref _typingMessageInProgress, 0);
+			_typingMessageInProgress = 0;
 
 			if (string.IsNullOrWhiteSpace(message))
 			{
@@ -308,7 +252,37 @@ namespace LiveTex.SampleApp.ViewModel
 				}
 			}, false);
 		}
-		
+
+		private void SendFile()
+		{
+			var choser = new PhotoChooserTask();
+			choser.Completed += ChoserCompleted;
+		}
+
+		private async void ChoserCompleted(object sender, PhotoResult e)
+		{
+			if(e.TaskResult != TaskResult.OK)
+			{
+				return;
+			}
+
+			var messageWrapper = new ChatMessageWrapper("Файл: " + e.OriginalFileName);
+			Messages.Add(messageWrapper);
+
+			await WrapRequest(async () =>
+			{
+				var result = await Client.SendFileAsync(e.OriginalFileName, e.ChosenPhoto);
+				if(result)
+				{
+					await SyncExecute(() =>
+					{
+						messageWrapper.SetMassageID(Guid.NewGuid().ToString());
+						Messages.UpdateMessage(messageWrapper);
+					});
+				}
+			});
+		}
+
 		private async void CloseDialog()
 		{
 			var result = await WrapRequest(() => Client.CloseDialogAsync());
@@ -319,7 +293,7 @@ namespace LiveTex.SampleApp.ViewModel
 			}
 		}
 
-		private async void VoteUp()
+		private async Task VoteUp()
 		{
 			var result = await WrapRequest(() => Client.VoteDialogAsync(VoteType.Good));
 
@@ -329,7 +303,7 @@ namespace LiveTex.SampleApp.ViewModel
 			}
 		}
 
-		private async void VoteDown()
+		private async Task VoteDown()
 		{
 			var result = await WrapRequest(() => Client.VoteDialogAsync(VoteType.Bad));
 
@@ -344,7 +318,7 @@ namespace LiveTex.SampleApp.ViewModel
 			App.RootFrame.Navigate(new Uri("/View/AbusePage.xaml", UriKind.Relative));
 		}
 
-		private async Task HandleDialogState(DialogState dialogState)
+		private void HandleDialogState(DialogState dialogState)
 		{
 			ConversationActive = dialogState.State != DialogStates.NoConversation;
 			IsAbuseAllowed = dialogState.State == DialogStates.ConversationActive;
@@ -369,54 +343,54 @@ namespace LiveTex.SampleApp.ViewModel
 
 		#region ILiveTexEventsHandler
 
-		void ILiveTexEventsHandler.Ban(string message)
+		async void ILiveTexEventsHandler.Ban(string message)
 		{
-			SyncExecute(() => MessageBox.Show(message, "Вы заблокированы", MessageBoxButton.OK));
+			await SyncExecute(() => MessageBox.Show(message, "Вы заблокированы", MessageBoxButton.OK));
 		}
 
-		void ILiveTexEventsHandler.UpdateDialogState(DialogState dialogState)
+		async void ILiveTexEventsHandler.UpdateDialogState(DialogState dialogState)
 		{
-			SyncExecute(() => HandleDialogState(dialogState));
+			await SyncExecute(() => HandleDialogState(dialogState));
 		}
 
-		void ILiveTexEventsHandler.ReceiveFileMessage(FileMessage message)
+		async void ILiveTexEventsHandler.ReceiveFileMessage(FileMessage message)
 		{
-			SyncExecute(() =>
+			await SyncExecute(() =>
 			{
 				HideTypingMessage();
 				Messages.Add(new ChatMessageWrapper(message));
 			});
 		}
 
-		void ILiveTexEventsHandler.ReceiveTextMessage(TextMessage message)
+		async void ILiveTexEventsHandler.ReceiveTextMessage(TextMessage message)
 		{
-			SyncExecute(() =>
+			await SyncExecute(() =>
 			{
 				HideTypingMessage();
 				Messages.Add(new ChatMessageWrapper(message));
 			});
 		}
 
-		void ILiveTexEventsHandler.ConfirmTextMessage(string messageId)
+		async void ILiveTexEventsHandler.ConfirmTextMessage(string messageId)
 		{
-			SyncExecute(() =>
+			await SyncExecute(() =>
 			{
 				Messages.MarkAsReceived(messageId);
 			});
 		}
 
-		void ILiveTexEventsHandler.ReceiveHoldMessage(HoldMessage message)
+		async void ILiveTexEventsHandler.ReceiveHoldMessage(HoldMessage message)
 		{
-			SyncExecute(() =>
+			await SyncExecute(() =>
 			{
 				HideTypingMessage();
 				Messages.Add(new ChatMessageWrapper(message));
 			});
 		}
 
-		void ILiveTexEventsHandler.ReceiveTypingMessage(TypingMessage message)
+		async void ILiveTexEventsHandler.ReceiveTypingMessage(TypingMessage message)
 		{
-			SyncExecute(() =>
+			await SyncExecute(() =>
 			{
 				HideTypingMessage();
 
@@ -425,6 +399,10 @@ namespace LiveTex.SampleApp.ViewModel
 
 				Task.Delay(5000).ContinueWith(t => SyncExecute(() => Messages.Remove(wrapper)));
 			});
+		}
+
+		void ILiveTexEventsHandler.ReceiveOfflineMessage(OfflineMessage message)
+		{
 		}
 
 		#endregion

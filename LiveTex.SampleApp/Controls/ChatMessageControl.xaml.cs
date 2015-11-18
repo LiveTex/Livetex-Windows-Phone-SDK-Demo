@@ -13,7 +13,7 @@ namespace LiveTex.SampleApp.Controls
 			InitializeComponent();
 		}
 
-		private void UriOnClick(object sender, RoutedEventArgs e)
+		private async void UriOnClick(object sender, RoutedEventArgs e)
 		{
 			try
 			{
@@ -24,7 +24,7 @@ namespace LiveTex.SampleApp.Controls
 					return;
 				}
 
-				Launcher.LaunchUriAsync(new Uri(uri));
+				await Launcher.LaunchUriAsync(new Uri(uri));
 			}
 			catch(Exception)
 			{

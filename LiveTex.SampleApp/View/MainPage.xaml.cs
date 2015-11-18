@@ -23,17 +23,17 @@ namespace LiveTex.SampleApp
 		{
 			base.OnNavigatedTo(e);
 
-			ViewModel.NavigatedTo();
+			ViewModel.NavigatedTo().LogAsyncError();
 		}
 
 		private void RemoveTokenClick(object sender, EventArgs e)
 		{
-			ViewModel.RemoveTokenCommand.Execute(null);
+			ViewModel.RemoveTokenCommand.ExecuteSafe();
 		}
 
 		private void InitializeClick(object sender, EventArgs e)
 		{
-			ViewModel.InitializeClientCommand.Execute(null);
+			ViewModel.InitializeClientCommand.ExecuteSafe();
 		}
 	}
 }

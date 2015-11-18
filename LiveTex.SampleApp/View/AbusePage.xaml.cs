@@ -1,4 +1,5 @@
-﻿using System.Windows.Navigation;
+﻿using System;
+using System.Windows.Navigation;
 using LiveTex.SampleApp.ViewModel;
 using Microsoft.Phone.Controls;
 
@@ -13,16 +14,13 @@ namespace LiveTex.SampleApp
 			DataContext = new AbuseViewModel();
 		}
 
-		private AbuseViewModel ViewModel
-		{
-			get { return (AbuseViewModel)DataContext; }
-		}
+		private AbuseViewModel ViewModel => (AbuseViewModel)DataContext;
 
 		protected override void OnNavigatedTo(NavigationEventArgs e)
 		{
 			base.OnNavigatedTo(e);
 
-			ViewModel.NavigatedTo();
+			ViewModel.NavigatedTo().LogAsyncError();
 		}
 	}
 }

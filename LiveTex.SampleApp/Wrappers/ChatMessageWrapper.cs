@@ -19,14 +19,13 @@ namespace LiveTex.SampleApp.Wrappers
 	public class ChatMessageWrapper
 		: INotifyPropertyChanged, IDisposable
 	{
-		private readonly ChatMessageType _messageType;
 		private readonly CancellationTokenSource _cts = new CancellationTokenSource();
 
 		public ChatMessageWrapper(string message)
 		{
 			TimeStamp = DateTime.Now;
 
-			_messageType = ChatMessageType.Text;
+			MessageType = ChatMessageType.Text;
 			
 			Message = message;
 			IsIncomingMessage = false;
@@ -34,33 +33,57 @@ namespace LiveTex.SampleApp.Wrappers
 			Status = "отправляется";
 		}
 
+		public ChatMessageWrapper(OfflineMessage offlineMessage)
+		{
+			Guard.NotNull(offlineMessage, nameof(offlineMessage));
+
+			MessageType = offlineMessage.MessageType == SDK.Client.MessageType.Text
+				? ChatMessageType.Text
+				: ChatMessageType.File;
+
+			TimeStamp = offlineMessage.Timestamp;
+
+			MessageID = offlineMessage.Id;
+
+			if(MessageType == ChatMessageType.File)
+			{
+				SetUri(offlineMessage.Url);
+			}
+			else
+			{
+				Message = offlineMessage.Message;
+			}
+
+			IsIncomingMessage = offlineMessage.SenderID != null;
+
+			Status = TimeStamp?.ToString("h:mm d MMM yyyy");
+        }
+
 		public ChatMessageWrapper(TextMessage textMessage)
 		{
 			if(textMessage == null)
 			{
-				throw new ArgumentNullException("textMessage");
+				throw new ArgumentNullException(nameof(textMessage));
 			}
 
-			_messageType = ChatMessageType.Text;
+			MessageType = ChatMessageType.Text;
 			TimeStamp = textMessage.Timestamp;
 			
 			MessageID = textMessage.Id;
 			Message = textMessage.Text;
 			IsIncomingMessage = textMessage.SenderID != null;
 
-			Status = TimeStamp != null
-				? TimeStamp.Value.ToString("h:mm d MMM yyyy")
-				: null;
+			Status = TimeStamp?.ToString("h:mm d MMM yyyy");
 		}
 
 		public ChatMessageWrapper(FileMessage fileMessage)
 		{
 			if (fileMessage == null)
 			{
-				throw new ArgumentNullException("fileMessage");
+				throw new ArgumentNullException(nameof(fileMessage));
 			}
 
-			_messageType = ChatMessageType.File;
+			MessageType = ChatMessageType.File;
 
 			MessageID = fileMessage.Id;
 			Message = fileMessage.Text;
@@ -69,40 +92,36 @@ namespace LiveTex.SampleApp.Wrappers
 
 			SetUri(fileMessage.Url);
 
-			Status = TimeStamp != null
-				? TimeStamp.Value.ToString("h:mm d MMM yyyy")
-				: null;
+			Status = TimeStamp?.ToString("h:mm d MMM yyyy");
 		}
 
 		public ChatMessageWrapper(HoldMessage holdMessage)
 		{
 			if (holdMessage == null)
 			{
-				throw new ArgumentNullException("holdMessage");
+				throw new ArgumentNullException(nameof(holdMessage));
 			}
 
-			_messageType = ChatMessageType.Hold;
+			MessageType = ChatMessageType.Hold;
 
 			Message = holdMessage.Text;
 			TimeStamp = holdMessage.Timestamp;
 			IsIncomingMessage = true;
 
-			Status = TimeStamp != null
-				? TimeStamp.Value.ToString("h:mm d MMM yyyy")
-				: null;
+			Status = TimeStamp?.ToString("h:mm d MMM yyyy");
 		}
 
 		public ChatMessageWrapper(TypingMessage typingMessage)
 		{
 			if (typingMessage == null)
 			{
-				throw new ArgumentNullException("typingMessage");
+				throw new ArgumentNullException(nameof(typingMessage));
 			}
 
-			_messageType = ChatMessageType.Typing;
+			MessageType = ChatMessageType.Typing;
 			IsIncomingMessage = true;
 
-			StartTypingAnimation();
+			StartTypingAnimation().LogAsyncError();
 		}
 
 		public DateTime? TimeStamp { get; private set; }
@@ -163,10 +182,7 @@ namespace LiveTex.SampleApp.Wrappers
 		public string Uri { get; private set; }
 		public string FileName{get;private set;}
 		
-		public ChatMessageType MessageType
-		{
-			get { return _messageType; }
-		}
+		public ChatMessageType MessageType { get; }
 
 		#region INotifyPropertyChanged
 
@@ -174,11 +190,7 @@ namespace LiveTex.SampleApp.Wrappers
 
 		protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
 		{
-			var handler = PropertyChanged;
-			if (handler != null)
-			{
-				handler(this, new PropertyChangedEventArgs(propertyName));
-			}
+			PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
 		}
 
 		#endregion
@@ -220,6 +232,11 @@ namespace LiveTex.SampleApp.Wrappers
 			Status = TimeStamp != null
 				? "√ " + TimeStamp.Value.ToString("h:mm d MMM yyyy")
 				: null;
+		}
+
+		public void MarkAsFailed()
+		{
+			Status = "не отправлено";
 		}
 
 		private async Task StartTypingAnimation()
