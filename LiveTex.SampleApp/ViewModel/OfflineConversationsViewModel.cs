@@ -11,9 +11,10 @@ namespace LiveTex.SampleApp.ViewModel
 	public class OfflineConversationsViewModel
 		: ViewModel
 	{
-		protected override async Task Initialize(object parameter)
+		protected override async Task OnNavigatedTo()
 		{
 			await WrapRequest(RefreshConversationsList);
+			await base.OnNavigatedTo();
 		}
 
 		#region Properties

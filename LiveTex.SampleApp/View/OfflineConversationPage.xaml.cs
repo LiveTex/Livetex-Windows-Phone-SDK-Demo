@@ -145,6 +145,11 @@ namespace LiveTex.SampleApp
 			Focus();
 		}
 
+		private void SendFileClick(object sender, EventArgs e)
+		{
+			ViewModel.SendFileCommand.ExecuteSafe();
+		}
+
 		private void AbuseClick(object sender, EventArgs e)
 		{
 			ViewModel.AbuseCommand.ExecuteSafe();

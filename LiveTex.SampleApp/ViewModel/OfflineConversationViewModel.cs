@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
@@ -8,6 +9,7 @@ using LiveTex.SampleApp.Wrappers;
 using LiveTex.SDK;
 using LiveTex.SDK.Client;
 using LiveTex.SDK.Sample;
+using Microsoft.Phone.Tasks;
 
 namespace LiveTex.SampleApp.ViewModel
 {
@@ -67,7 +69,10 @@ namespace LiveTex.SampleApp.ViewModel
 
 		private AsyncCommand _sendMessageCommand;
 		public AsyncCommand SendMessageCommand => GetAsyncCommand(ref _sendMessageCommand, SendMessage);
-		
+
+		private DelegateCommand _sendFileCommand;
+		public DelegateCommand SendFileCommand => GetCommand(ref _sendFileCommand, SendFile);
+
 		private DelegateCommand _closeDialogCommand;
 		public DelegateCommand CloseDialogCommand => GetCommand(ref _closeDialogCommand, App.RootFrame.GoBack);
 
@@ -118,7 +123,7 @@ namespace LiveTex.SampleApp.ViewModel
 				{
 					foreach (var message in messages)
 					{
-						if(string.Equals(message.Id, lastMessage.MessageID, StringComparison.Ordinal))
+						if(string.Equals(message.Id.ToString(), lastMessage.MessageID, StringComparison.Ordinal))
 						{
 							break;
 						}
@@ -209,7 +214,39 @@ namespace LiveTex.SampleApp.ViewModel
 				messageWrapper.MarkAsFailed();
 			}
 		}
-		
+
+		private void SendFile()
+		{
+			var choser = new PhotoChooserTask();
+			choser.Completed += ChoserCompleted;
+			choser.ShowCamera = true;
+			choser.Show();
+		}
+
+		private async void ChoserCompleted(object sender, PhotoResult e)
+		{
+			if (e.TaskResult != TaskResult.OK)
+			{
+				return;
+			}
+
+			var messageWrapper = new ChatMessageWrapper("Файл: " + e.OriginalFileName);
+			Messages.Add(messageWrapper);
+
+			await WrapRequest(async () =>
+			{
+				var result = await Client.SendOfflineFileAsync(ConversationID, Path.GetFileName(e.OriginalFileName), e.ChosenPhoto);
+				if (result)
+				{
+					await SyncExecute(() =>
+					{
+						messageWrapper.SetMassageID(Guid.NewGuid().ToString());
+						Messages.UpdateMessage(messageWrapper);
+					});
+				}
+			});
+		}
+
 		private async Task VoteUp()
 		{
 			var result = await WrapRequest(() => Client.VoteDialogAsync(VoteType.Good));

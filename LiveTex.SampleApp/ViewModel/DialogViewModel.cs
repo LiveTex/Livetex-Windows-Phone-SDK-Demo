@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -257,6 +258,8 @@ namespace LiveTex.SampleApp.ViewModel
 		{
 			var choser = new PhotoChooserTask();
 			choser.Completed += ChoserCompleted;
+			choser.ShowCamera = true;
+			choser.Show();
 		}
 
 		private async void ChoserCompleted(object sender, PhotoResult e)

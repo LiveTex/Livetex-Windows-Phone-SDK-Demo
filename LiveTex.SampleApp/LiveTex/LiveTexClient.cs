@@ -17,7 +17,7 @@ namespace LiveTex.SampleApp.LiveTex
 			}
 
 			var factory = new LiveTexClientFactory(key, applicationID, new Uri(authServerUri));
-			Client = await factory.CreateAsync(Token, Capabilities.Chat, Capabilities.FilesReceive, Capabilities.Invitation, Capabilities.Offline);
+			Client = await factory.CreateAsync(Token, Capabilities.Chat, Capabilities.FilesReceive, Capabilities.Invitation, Capabilities.Offline, Capabilities.FilesSend);
 
 			Token = Client.GetToken();
 		}

@@ -43,7 +43,7 @@ namespace LiveTex.SampleApp.Wrappers
 
 			TimeStamp = offlineMessage.Timestamp;
 
-			MessageID = offlineMessage.Id;
+			MessageID = offlineMessage.Id.ToString();
 
 			if(MessageType == ChatMessageType.File)
 			{
@@ -54,7 +54,7 @@ namespace LiveTex.SampleApp.Wrappers
 				Message = offlineMessage.Message;
 			}
 
-			IsIncomingMessage = offlineMessage.SenderID != null;
+			IsIncomingMessage = offlineMessage.SenderID != null && offlineMessage.SenderID != "0";
 
 			Status = TimeStamp?.ToString("h:mm d MMM yyyy");
         }
