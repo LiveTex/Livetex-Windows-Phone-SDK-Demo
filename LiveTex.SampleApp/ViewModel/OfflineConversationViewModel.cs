@@ -230,7 +230,7 @@ namespace LiveTex.SampleApp.ViewModel
 				return;
 			}
 
-			var messageWrapper = new ChatMessageWrapper("Файл: " + e.OriginalFileName);
+			var messageWrapper = new ChatMessageWrapper("Файл: " + Path.GetFileName(e.OriginalFileName));
 			Messages.Add(messageWrapper);
 
 			await WrapRequest(async () =>
@@ -242,6 +242,7 @@ namespace LiveTex.SampleApp.ViewModel
 					{
 						messageWrapper.SetMassageID(Guid.NewGuid().ToString());
 						Messages.UpdateMessage(messageWrapper);
+						Messages.MarkAsReceived(messageWrapper.MessageID);
 					});
 				}
 			});
