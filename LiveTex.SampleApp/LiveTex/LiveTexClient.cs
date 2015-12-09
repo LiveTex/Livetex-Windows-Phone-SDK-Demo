@@ -22,6 +22,20 @@ namespace LiveTex.SampleApp.LiveTex
 			Token = Client.GetToken();
 		}
 
+		public static async Task Initialize(string key, string applicationID, string authServerUri, string pushChanel)
+		{
+			if (Client != null)
+			{
+				Client.Dispose();
+				Client = null;
+			}
+
+			var factory = new LiveTexClientFactory(key, applicationID, new Uri(authServerUri));
+			Client = await factory.CreateAsync(pushChanel, Token, Capabilities.Chat, Capabilities.FilesReceive, Capabilities.Invitation, Capabilities.Offline, Capabilities.FilesSend);
+
+			Token = Client.GetToken();
+		}
+
 		public static ILiveTexClient Client { get; private set; }
 
 		public static string Message { get; set; }

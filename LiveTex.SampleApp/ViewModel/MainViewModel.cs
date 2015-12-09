@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Threading.Tasks;
 using LiveTex.SampleApp.LiveTex;
-using LiveTex.SDK.Client;
 using LiveTex.SDK.Sample;
+using Microsoft.Phone.Notification;
 
 namespace LiveTex.SampleApp.ViewModel
 {
@@ -12,6 +12,7 @@ namespace LiveTex.SampleApp.ViewModel
 		private const string cKeyKey = "ApplicationKey";
 		private const string cAppIDKey = "ApplicationID";
 		private const string cAuthUriKey = "AuthenticatedUriKey";
+		private const string cPushChanelName = "LiveTextPushChanel";
 
 		protected override Task Initialize(object parameter)
 		{
@@ -79,10 +80,55 @@ namespace LiveTex.SampleApp.ViewModel
 					Storage.SetValue(cAppIDKey, AppID);
 					Storage.SetValue(cAuthUriKey, AuthUri);
 
-					await LiveTexClient.Initialize(Key, AppID, AuthUri);
+					var pushChanel = await GetPushChanelUri();
+
+					await LiveTexClient.Initialize(Key, AppID, AuthUri, pushChanel);
 
 					App.RootFrame.Navigate(new Uri("/View/SelectServicePage.xaml", UriKind.Relative));
 				});
+		}
+
+		private HttpNotificationChannel _notificationChannel;
+
+		private async Task<string> GetPushChanelUri()
+		{
+			if(_notificationChannel != null)
+			{
+				return _notificationChannel.ChannelUri.ToString();
+			}
+
+			_notificationChannel = HttpNotificationChannel.Find(cPushChanelName);
+
+			if (_notificationChannel == null)
+			{
+				_notificationChannel = new HttpNotificationChannel(cPushChanelName);
+
+				var tcs = new TaskCompletionSource<bool>();
+
+				EventHandler<NotificationChannelUriEventArgs> uriUpdated = null;
+				uriUpdated = (o, e) =>
+				{
+					_notificationChannel.ChannelUriUpdated -= uriUpdated;
+					tcs.TrySetResult(true);
+				};
+
+				EventHandler<NotificationChannelErrorEventArgs> errorOccured = null;
+				errorOccured = (o, e) =>
+				{
+					_notificationChannel.ErrorOccurred -= errorOccured;
+					tcs.SetException(new Exception(e.Message));
+				};
+
+				_notificationChannel.ChannelUriUpdated += uriUpdated;
+				_notificationChannel.ErrorOccurred += errorOccured;
+
+				_notificationChannel.Open();
+				_notificationChannel.BindToShellToast();
+
+				await tcs.Task;
+			}
+
+			return _notificationChannel.ChannelUri.ToString();
 		}
 	}
 }
