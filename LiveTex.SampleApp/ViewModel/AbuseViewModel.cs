@@ -38,44 +38,21 @@ namespace LiveTex.SampleApp.ViewModel
 		public string Message
 		{
 			get { return _message; }
-			set
-			{
-				if (SetValue(ref _message, value))
-				{
-					AbuseCommand.RiseCanExecuteChanged();
-				}
-			}
+			set { SetValue(ref _message, value, AbuseCommand.RiseCanExecuteChanged); }
 		}
 
 		private string _contact;
 		public string Contact
 		{
 			get { return _contact; }
-			set
-			{
-				if (SetValue(ref _contact, value))
-				{
-					AbuseCommand.RiseCanExecuteChanged();
-				}
-			}
+			set { SetValue(ref _contact, value, AbuseCommand.RiseCanExecuteChanged); }
 		}
 
 		#endregion
 
-		private DelegateCommand _abuseCommand;
-		public DelegateCommand AbuseCommand
-		{
-			get
-			{
-				if(_abuseCommand == null)
-				{
-					_abuseCommand = new DelegateCommand(Abuse, IsAbuseAllowed);
-				}
-
-				return _abuseCommand;
-			}
-		}
-
+		private AsyncCommand _abuseCommand;
+		public AsyncCommand AbuseCommand => GetAsyncCommand(ref _abuseCommand, Abuse, IsAbuseAllowed);
+		
 		private bool IsAbuseAllowed()
 		{
 			return ConversationActive
@@ -83,41 +60,44 @@ namespace LiveTex.SampleApp.ViewModel
 				&& !string.IsNullOrWhiteSpace(Contact);
 		}
 
-		private async void Abuse()
+		private async Task Abuse()
 		{
 			if(!IsAbuseAllowed())
 			{
 				return;
 			}
 
-			var result = await WrapRequest(() => Client.AbuseAsync(new Abuse { Contact = Contact, Message = Message }));
-			if(result)
+			using(BeginBusy())
 			{
-				App.RootFrame.GoBack();
+				var result = await WrapRequest(() => Client.AbuseAsync(new Abuse {Contact = Contact, Message = Message}));
+				if(result)
+				{
+					App.RootFrame.GoBack();
+				}
 			}
 		}
 
 		protected override async Task OnNavigatedTo()
 		{
-			await WrapRequest(async () =>
+			using(BeginBusy())
 			{
-				var dialogState = await Client.GetDialogStateAsync();
-				HandleDialogState(dialogState);
-			});
+				await WrapRequest(async () =>
+				{
+					var dialogState = await Client.GetDialogStateAsync();
+					HandleDialogState(dialogState);
+				});
 
-			await base.OnNavigatedTo();
+				await base.OnNavigatedTo();
 
-			_eventsSubscription = Client.SubscribeToEvents(this);
+				_eventsSubscription = Client.SubscribeToEvents(this);
+			}
 		}
 
 		protected override Task OnNavigatedForm()
 		{
-			if (_eventsSubscription != null)
-			{
-				_eventsSubscription.Dispose();
-				_eventsSubscription = null;
-			}
-
+			_eventsSubscription?.Dispose();
+			_eventsSubscription = null;
+			
 			return base.OnNavigatedForm();
 		}
 

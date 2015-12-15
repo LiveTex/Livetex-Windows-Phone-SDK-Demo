@@ -137,15 +137,16 @@ namespace LiveTex.SampleApp.ViewModel
 					? await Client.GetEmployeesAsync("online")
 					: await Client.GetDepartmentEmployeesAsync(departmentId);
 			}
-			catch (AggregateException ex)
+			catch(AggregateException ex) when (ex.InnerException is ServiceUnavailableException)
 			{
-				if (!(ex.InnerException is ServiceUnavailableException))
-				{
-					throw ex.InnerException;
-				}
 			}
 			catch (ServiceUnavailableException)
-			{ }
+			{
+			}
+			catch (AggregateException ex)
+			{
+				throw ex.Unwrap();
+			}
 
 			var result = new List<ListItemWrapper<Employee>>
 			{

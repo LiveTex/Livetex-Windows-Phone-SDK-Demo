@@ -1,11 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Globalization;
-using System.Linq;
 using System.Threading.Tasks;
-using System.Windows;
-using LiveTex.SampleApp.LiveTex;
-using LiveTex.SampleApp.Wrappers;
 using LiveTex.SDK.Client;
 using LiveTex.SDK.Sample;
 
@@ -24,16 +18,25 @@ namespace LiveTex.SampleApp.ViewModel
 		{
 			using(BeginBusy())
 			{
-				var dialogState = await Client.GetDialogStateAsync();
+				await WrapRequest(async () =>
+				{
+					var employees = await Client.GetEmployeesAsync("online");
+					if(employees?.Count == 0)
+					{
+						throw new Exception("Операторов нет в сети. Пожалуйста, используйте другой канал для связи.");
+					}
 
-				if(dialogState.State == DialogStates.NoConversation)
-				{
-					App.RootFrame.Navigate(new Uri("/View/RequestDialogPage.xaml", UriKind.Relative));
-				}
-				else
-				{
-					App.RootFrame.Navigate(new Uri("/View/DialogPage.xaml", UriKind.Relative));
-				}
+					var dialogState = await Client.GetDialogStateAsync();
+
+					if (dialogState.State == DialogStates.NoConversation)
+					{
+						App.RootFrame.Navigate(new Uri("/View/RequestDialogPage.xaml", UriKind.Relative));
+					}
+					else
+					{
+						App.RootFrame.Navigate(new Uri("/View/DialogPage.xaml", UriKind.Relative));
+					}
+				});
 			}
 		}
 

@@ -20,10 +20,11 @@ namespace LiveTex.SampleApp.Helpers
 			while (queue.Count > 0)
 			{
 				var element = queue.Dequeue();
-				if (element is T
-					&& !ReferenceEquals(element, dependencyObject))
+				var descendant = element as T;
+				if (descendant != null
+					&& !ReferenceEquals(descendant, dependencyObject))
 				{
-					return (T)element;
+					return descendant;
 				}
 
 				for (var index = 0; index < VisualTreeHelper.GetChildrenCount(element); index++)
@@ -50,10 +51,11 @@ namespace LiveTex.SampleApp.Helpers
 			{
 				var element = queue.Dequeue();
 
-				if (element is T
-					&& !ReferenceEquals(element, dependencyObject))
+				var descendant = element as T;
+				if (descendant != null
+					&& !ReferenceEquals(descendant, dependencyObject))
 				{
-					yield return (T)element;
+					yield return descendant;
 				}
 
 				for (var index = 0; index < VisualTreeHelper.GetChildrenCount(element); index++)
@@ -78,9 +80,10 @@ namespace LiveTex.SampleApp.Helpers
 			{
 				var element = queue.Dequeue();
 
-				if (element is T)
+				var descendant = element as T;
+				if (descendant != null)
 				{
-					yield return (T)element;
+					yield return descendant;
 				}
 
 				for (var index = 0; index < VisualTreeHelper.GetChildrenCount(element); index++)
@@ -97,9 +100,10 @@ namespace LiveTex.SampleApp.Helpers
 
 			while (current != null)
 			{
-				if (current is T)
+				var ancestor = current as T;
+				if (ancestor != null)
 				{
-					return (T)current;
+					return ancestor;
 				}
 
 				current = VisualTreeHelper.GetParent(current);
@@ -115,9 +119,10 @@ namespace LiveTex.SampleApp.Helpers
 
 			while (current != null)
 			{
-				if (current is T)
+				var ancestor = current as T;
+				if (ancestor != null)
 				{
-					yield return (T)current;
+					yield return ancestor;
 				}
 
 				current = VisualTreeHelper.GetParent(current);
