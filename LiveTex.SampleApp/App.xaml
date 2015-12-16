@@ -16,8 +16,8 @@
         <converters:NullToVisibilityConverter x:Key="NullToVisibilityConverter"/>
         <converters:ListItemWrapperConverter x:Key="ListItemWrapperConverter" />
 
-        <Color x:Key="LiveTexBlueColor">#FF4BA7DE</Color>
-        <SolidColorBrush Color="#FF4BA7DE" x:Key="LiveTexBlueBrush"/>
+		<Color x:Key="LiveTexBlueColor">#FF0277BD</Color>
+        <SolidColorBrush Color="{StaticResource LiveTexBlueColor}" x:Key="LiveTexBlueBrush"/>
 
         <Style x:Key="LiveTexWhiteTextBoxStyle" TargetType="TextBox">
             <Setter Property="FontFamily" Value="{StaticResource PhoneFontFamilyNormal}"/>

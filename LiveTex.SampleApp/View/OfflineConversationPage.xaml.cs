@@ -159,15 +159,5 @@ namespace LiveTex.SampleApp
 		{
 			ViewModel.CloseDialogCommand.ExecuteSafe();
 		}
-
-		private void GoodButtonTap(object sender, System.Windows.Input.GestureEventArgs e)
-		{
-			ViewModel.VoteUpCommand.ExecuteSafe();
-		}
-
-		private void BadButtonTap(object sender, System.Windows.Input.GestureEventArgs e)
-		{
-			ViewModel.VoteDownCommand.ExecuteSafe();
-		}
 	}
 }

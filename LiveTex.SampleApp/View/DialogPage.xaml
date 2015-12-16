@@ -17,7 +17,7 @@
     SupportedOrientations="Portrait" Orientation="Portrait"
     mc:Ignorable="d"
     shell:SystemTray.IsVisible="True"
-    shell:SystemTray.BackgroundColor="White"
+    shell:SystemTray.BackgroundColor="{StaticResource LiveTexBlueColor}"
     local:DialogPage.IsAbuseMenuVisible="{Binding IsAbuseAllowed}">
     <phone:PhoneApplicationPage.Resources>
         <Style x:Key="ListBoxScreenWideItem" TargetType="ListBoxItem">
@@ -65,6 +65,11 @@
             <Setter Property="SelectionForeground" Value="White"/>
             <Setter Property="BorderThickness" Value="{StaticResource PhoneBorderThickness}"/>
             <Setter Property="Padding" Value="2"/>
+			<Setter Property="MaxHeight" Value="186" />
+			<Setter Property="Margin" Value="0" />
+			<Setter Property="InputScope" Value="Chat" />
+			<Setter Property="AcceptsReturn" Value="True" />
+			<Setter Property="TextWrapping" Value="Wrap" />
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="TextBox">
@@ -140,7 +145,7 @@
 
                             <Border Grid.Row="0" x:Name="MainBorder" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" Background="{TemplateBinding Background}" Margin="{StaticResource PhoneTouchTargetOverhang}"/>
                             <Border Grid.Row="0" x:Name="ReadonlyBorder" BorderBrush="{StaticResource PhoneDisabledBrush}" BorderThickness="{TemplateBinding BorderThickness}" Background="Transparent" Margin="{StaticResource PhoneTouchTargetOverhang}" Visibility="Collapsed"/>
-                            <Border Grid.Row="0"  BorderBrush="Transparent" BorderThickness="{TemplateBinding BorderThickness}" Background="Transparent" Margin="{StaticResource PhoneTouchTargetOverhang}">
+                            <Border Grid.Row="0" BorderBrush="Transparent" BorderThickness="{TemplateBinding BorderThickness}" Background="Transparent" Margin="{StaticResource PhoneTouchTargetOverhang}">
                                 <ContentControl x:Name="ContentElement" BorderThickness="0" HorizontalContentAlignment="Stretch" Margin="{StaticResource PhoneTextBoxInnerMargin}" Padding="{TemplateBinding Padding}" VerticalContentAlignment="Stretch"/>
                             </Border>
                             <Polygon x:Name="Pin" Grid.Row="1" Fill="{TemplateBinding BorderBrush}" Width="12" Height="24" Points="0,0 12,0 12,12" StrokeThickness="0" RenderTransformOrigin="0.5, 0.5" HorizontalAlignment="Right" Margin="0,-13,24,12"/>
@@ -186,16 +191,18 @@
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
-        <Grid Grid.Row="0" Margin="12,24,0,12" Height="88">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="Auto" />
-                <ColumnDefinition Width="*" />
-            </Grid.ColumnDefinitions>
+		<Border Grid.Row="0" Background="{StaticResource LiveTexBlueBrush}">
+			<Grid Margin="12,24,0,12" Height="88" >
+				<Grid.ColumnDefinitions>
+					<ColumnDefinition Width="Auto" />
+					<ColumnDefinition Width="*" />
+				</Grid.ColumnDefinitions>
 
-            <Image Grid.Column="0" Source="{Binding EmployeeAvatar}" Width="64" Height="64" Margin="12" Visibility="{Binding EmployeeAvatar, Converter={StaticResource NullToVisibilityConverter}}"/>
-            <TextBlock Grid.Column="1" Foreground="{StaticResource LiveTexBlueBrush}" Text="{Binding EmployeeName}" Style="{StaticResource PhoneTextTitle2Style}" Margin="12,0,0,0" VerticalAlignment="Top" />
-        </Grid>
-
+				<Image Grid.Column="0" Source="{Binding EmployeeAvatar}" Width="64" Height="64" Margin="12" Visibility="{Binding EmployeeAvatar, Converter={StaticResource NullToVisibilityConverter}}"/>
+				<TextBlock Grid.Column="1" Foreground="White" Text="{Binding EmployeeName}" Style="{StaticResource PhoneTextTitle2Style}" Margin="12,0,0,0" VerticalAlignment="Top" />
+			</Grid>
+		</Border>
+		
         <Grid Grid.Row="1" Background="LightGray">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*"/>
@@ -238,8 +245,19 @@
                     <RowDefinition Height="Auto" />
                 </Grid.RowDefinitions>
 
-                <TextBox Grid.Row="0" Grid.Column="1" MaxHeight="186" x:Name="viewMessageText" Margin="0" InputScope="Chat" Text="{Binding MessageText, Mode=TwoWay}" helpers:TextBoxHelper.UpdateSourceOnTextChanged="true" IsEnabled="{Binding ConversationActive}" Style="{StaticResource MessageTextBoxStyle}" AcceptsReturn="True" />
-            </Grid>
+				<TextBox 
+					x:Name="viewMessageText"
+					
+					Grid.Row="0" 
+					Grid.Column="1"
+					
+					Style="{StaticResource MessageTextBoxStyle}"
+					
+					Text="{Binding MessageText, Mode=TwoWay}"
+					
+					helpers:TextBoxHelper.UpdateSourceOnTextChanged="true"
+					IsEnabled="{Binding ConversationActive}" />
+			</Grid>
         </Grid>
 
         <Grid Grid.Row="0" Grid.RowSpan="3" Visibility="{Binding IsBusy, Converter={StaticResource BoolToVisibilityConverter}}" d:IsHidden="True">

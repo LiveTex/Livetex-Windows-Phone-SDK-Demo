@@ -76,12 +76,6 @@ namespace LiveTex.SampleApp.ViewModel
 		private DelegateCommand _closeDialogCommand;
 		public DelegateCommand CloseDialogCommand => GetCommand(ref _closeDialogCommand, App.RootFrame.GoBack);
 
-		private AsyncCommand _voteUpCommand;
-		public AsyncCommand VoteUpCommand => GetAsyncCommand(ref _voteUpCommand, VoteUp, () => IsAbuseAllowed);
-
-		private AsyncCommand _voteDownCommand;
-		public AsyncCommand VoteDownCommand => GetAsyncCommand(ref _voteDownCommand, VoteDown, () => IsAbuseAllowed);
-
 		private DelegateCommand _abuseCommand;
 		public DelegateCommand AbuseCommand => GetCommand(ref _abuseCommand, Abuse, () => IsAbuseAllowed);
 		
@@ -246,26 +240,6 @@ namespace LiveTex.SampleApp.ViewModel
 					});
 				}
 			});
-		}
-
-		private async Task VoteUp()
-		{
-			var result = await WrapRequest(() => Client.VoteDialogAsync(VoteType.Good));
-
-			if(result)
-			{
-				MessageBox.Show("Учтена оценка Хорошо", "оценка диалога", MessageBoxButton.OK);
-			}
-		}
-
-		private async Task VoteDown()
-		{
-			var result = await WrapRequest(() => Client.VoteDialogAsync(VoteType.Bad));
-
-			if (result)
-			{
-				MessageBox.Show("Учтена оценка Плохо", "оценка диалога", MessageBoxButton.OK);
-			}
 		}
 
 		private void Abuse()

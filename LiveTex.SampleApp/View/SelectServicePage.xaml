@@ -24,20 +24,19 @@
 			<RowDefinition Height="*"/>
 		</Grid.RowDefinitions>
 
-		<StackPanel x:Name="TitlePanel" Grid.Row="0" Margin="12,17,0,28">
-			<TextBlock Text="LIVETEX" Foreground="{StaticResource LiveTexBlueBrush}" Style="{StaticResource PhoneTextNormalStyle}" Margin="12,0"/>
-			<TextBlock Text="канал обращения" Foreground="{StaticResource LiveTexBlueBrush}" Margin="9,-7,0,0" Style="{StaticResource PhoneTextTitle1Style}"/>
+		<StackPanel x:Name="TitlePanel" Grid.Row="0" Margin="48,24,48,24">
+			<Image Source="/Assets/LiveTex.png"/>
 		</StackPanel>
 
 		<Grid x:Name="ContentPanel" Grid.Row="1" Margin="12,0,12,0">
             <StackPanel>
-				<TextBlock Style="{StaticResource LiveTexLabelTextStyle}" FontWeight="Bold" TextWrapping="Wrap" TextAlignment="Center">
+				<TextBlock Style="{StaticResource LiveTexLabelTextStyle}" FontWeight="Bold" TextWrapping="Wrap" TextAlignment="Center" Margin="12,48" Opacity="0.65">
             		<Run Text="Приложение для демонстрации"/>
             		<LineBreak/>
-            		<Run Text="LiveTex Mobile SDK"/>
+            		<Run Text="возможностей LiveTex Mobile SDK"/>
 				</TextBlock>
 				
-				<Button Content="Чат с оператором" HorizontalContentAlignment="Stretch" Command="{Binding OnlineDialogCommand}">
+				<Button Content="Чат с оператором" HorizontalContentAlignment="Stretch" Command="{Binding OnlineDialogCommand}" Margin="0,12,0,48">
 					<Button.ContentTemplate>
 						<DataTemplate>
 							<StackPanel>

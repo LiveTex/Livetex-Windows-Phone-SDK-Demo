@@ -180,7 +180,7 @@ namespace LiveTex.SampleApp.ViewModel
 
 			if(string.IsNullOrWhiteSpace(Message))
 			{
-				MessageBox.Show("Сообщение не может быть пустым", "Ошибка", MessageBoxButton.OK);
+				MessageBox.Show("Заполните поле 'Сообщение'", "Ошибка", MessageBoxButton.OK);
 				return;
 			}
 

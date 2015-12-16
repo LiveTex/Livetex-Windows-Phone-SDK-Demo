@@ -35,5 +35,10 @@ namespace LiveTex.SampleApp
 				NavigationService.RemoveBackEntry();
 			}
 		}
+
+		private void AppBarSendClick(object sender, EventArgs e)
+		{
+			ViewModel.CreateOfflineConversationCommand.ExecuteSafe();
+		}
 	}
 }

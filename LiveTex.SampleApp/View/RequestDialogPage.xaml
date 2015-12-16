@@ -16,32 +16,48 @@
     shell:SystemTray.IsVisible="True"
     shell:SystemTray.BackgroundColor="White">
 
-    <Grid x:Name="LayoutRoot" Background="White">
-        <Grid x:Name="ContentPanel" Margin="12,36,12,0">
-            <StackPanel>
-                <TextBlock Text="Ваше имя" Style="{StaticResource LiveTexLabelTextStyle}" />
-                <TextBox Text="{Binding UserName, Mode=TwoWay}" />
+	<phone:PhoneApplicationPage.ApplicationBar>
+		<shell:ApplicationBar BackgroundColor="White" ForegroundColor="Black">
+			<shell:ApplicationBarIconButton IconUri="/Assets/AppBar/check.png" Text="отправить" Click="AppBarSendClick"/>
+		</shell:ApplicationBar>
+	</phone:PhoneApplicationPage.ApplicationBar>
 
-                <TextBlock Text="Выберите оператора" Style="{StaticResource LiveTexLabelTextStyle}" FontFamily="Portable User Interface" />
-                <toolkit:ListPicker IsEnabled="{Binding IsEmployeeSelectionAllowed}" ItemsSource="{Binding Employees}" SelectedItem="{Binding Employee, Mode=TwoWay}" FontFamily="Portable User Interface" />
-                 
-                <TextBlock Text="Выберите отдел" Style="{StaticResource LiveTexLabelTextStyle}" FontFamily="Portable User Interface" />
-                <toolkit:ListPicker IsEnabled="{Binding IsDepartmentSelectionAllowed}" ItemsSource="{Binding Departments}" SelectedItem="{Binding Department, Mode=TwoWay}" FontFamily="Portable User Interface"/>
-                    
-                <TextBlock Text="Укажите возраст" Style="{StaticResource LiveTexLabelTextStyle}" />
-                <TextBox Text="{Binding UserAge, Mode=TwoWay}" />
+	<Grid x:Name="LayoutRoot" Background="White">
+		<Grid.RowDefinitions>
+			<RowDefinition Height="Auto"/>
+			<RowDefinition Height="*"/>
+		</Grid.RowDefinitions>
 
-                <TextBlock Text="Напишите сообщение" Style="{StaticResource LiveTexLabelTextStyle}" />
-                <TextBox Text="{Binding Message, Mode=TwoWay}" Height="168" AcceptsReturn="True" />
+		<StackPanel x:Name="TitlePanel" Grid.Row="0" Margin="12,17,0,28">
+			<TextBlock Text="LIVETEX" Foreground="{StaticResource LiveTexBlueBrush}" Style="{StaticResource PhoneTextNormalStyle}" Margin="12,0"/>
+			<TextBlock Text="начать чат" Foreground="{StaticResource LiveTexBlueBrush}" Margin="9,-7,0,0" Style="{StaticResource PhoneTextTitle1Style}"/>
+		</StackPanel>
 
-                <Button Content="Отправить" Margin="0,12,0,0" HorizontalAlignment="Left" Command="{Binding RequestDialogCommand}" Padding="24,5,24,6"/>
-            </StackPanel>
-        </Grid>
+		<Grid Grid.Row="1" x:Name="ContentPanel" Margin="12,0">
+			<ScrollViewer>
+				<StackPanel>
+					<TextBlock Text="Имя" Style="{StaticResource LiveTexLabelTextStyle}" />
+					<TextBox Text="{Binding UserName, Mode=TwoWay}" />
 
-        <Grid Visibility="{Binding IsBusy, Converter={StaticResource BoolToVisibilityConverter}}" d:IsHidden="True">
-            <Border Background="White" Opacity="0.75"/>
-            <TextBlock Foreground="Black" Text="Загрузка..." HorizontalAlignment="Center" VerticalAlignment="Center" />
-        </Grid>
-    </Grid>
+					<TextBlock Text="Оператор" Style="{StaticResource LiveTexLabelTextStyle}" FontFamily="Portable User Interface" />
+					<toolkit:ListPicker IsEnabled="{Binding IsEmployeeSelectionAllowed}" ItemsSource="{Binding Employees}" SelectedItem="{Binding Employee, Mode=TwoWay}" FontFamily="Portable User Interface" />
+
+					<TextBlock Text="Отдел" Style="{StaticResource LiveTexLabelTextStyle}" FontFamily="Portable User Interface" />
+					<toolkit:ListPicker IsEnabled="{Binding IsDepartmentSelectionAllowed}" ItemsSource="{Binding Departments}" SelectedItem="{Binding Department, Mode=TwoWay}" FontFamily="Portable User Interface"/>
+
+					<TextBlock Text="Возраст" Style="{StaticResource LiveTexLabelTextStyle}" />
+					<TextBox Text="{Binding UserAge, Mode=TwoWay}" />
+
+					<TextBlock Text="Сообщение" Style="{StaticResource LiveTexLabelTextStyle}" />
+					<TextBox Text="{Binding Message, Mode=TwoWay}" Height="168" AcceptsReturn="True" TextWrapping="Wrap" />
+				</StackPanel>
+			</ScrollViewer>
+		</Grid>
+
+		<Grid Visibility="{Binding IsBusy, Converter={StaticResource BoolToVisibilityConverter}}" d:IsHidden="True">
+			<Border Background="White" Opacity="0.75"/>
+			<TextBlock Foreground="Black" Text="Загрузка..." HorizontalAlignment="Center" VerticalAlignment="Center" />
+		</Grid>
+	</Grid>
 
 </phone:PhoneApplicationPage>
