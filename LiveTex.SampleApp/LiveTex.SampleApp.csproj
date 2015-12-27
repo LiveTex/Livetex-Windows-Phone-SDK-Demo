@@ -251,11 +251,11 @@
   </ItemGroup>
   <ItemGroup>
     <Reference Include="LiveTex.SDK, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\LiveTex.SDK.2.0.0.1\lib\windowsphone8\LiveTex.SDK.dll</HintPath>
+      <HintPath>..\packages\LiveTex.SDK.2.0.0.2\lib\windowsphone8\LiveTex.SDK.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="LiveTex.Thrift, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\LiveTex.SDK.2.0.0.1\lib\windowsphone8\LiveTex.Thrift.dll</HintPath>
+      <HintPath>..\packages\LiveTex.SDK.2.0.0.2\lib\windowsphone8\LiveTex.Thrift.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Microsoft.Phone.Controls.Toolkit">

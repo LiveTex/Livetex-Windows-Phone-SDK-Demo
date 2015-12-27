@@ -175,11 +175,7 @@
 	</phone:PhoneApplicationPage.Resources>
 	<phone:PhoneApplicationPage.ApplicationBar>
 		<shell:ApplicationBar BackgroundColor="White" ForegroundColor="Black">
-			<shell:ApplicationBar.MenuItems>
-				<shell:ApplicationBarMenuItem Text="оставить жалобу" Click="AbuseClick"/>
-				<shell:ApplicationBarMenuItem Text="закрыть обращение" Click="CloseDialogClick"/>
-			</shell:ApplicationBar.MenuItems>
-			<shell:ApplicationBarIconButton IconUri="/Assets/AppBar/Send.png" Text="отправить" Click="SendMessageClick"/>
+			<shell:ApplicationBarIconButton IconUri="/Assets/AppBar/Send.png" Text="создать" Click="SendMessageClick"/>
 			<shell:ApplicationBarIconButton IconUri="/Assets/AppBar/upload.png" Text="файл" Click="SendFileClick"/>
 		</shell:ApplicationBar>
 	</phone:PhoneApplicationPage.ApplicationBar>

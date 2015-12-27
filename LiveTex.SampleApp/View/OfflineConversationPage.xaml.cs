@@ -116,14 +116,6 @@ namespace LiveTex.SampleApp
 			ViewModel.NavigatedFrom().LogAsyncError();
 		}
 
-		protected override void OnBackKeyPress(CancelEventArgs e)
-		{
-			ViewModel.CloseDialogCommand.ExecuteSafe();
-
-			e.Cancel = true;
-			base.OnBackKeyPress(e);
-		}
-
 		private void MessagesCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
 		{
 			if(e.Action == NotifyCollectionChangedAction.Add)
@@ -148,16 +140,6 @@ namespace LiveTex.SampleApp
 		private void SendFileClick(object sender, EventArgs e)
 		{
 			ViewModel.SendFileCommand.ExecuteSafe();
-		}
-
-		private void AbuseClick(object sender, EventArgs e)
-		{
-			ViewModel.AbuseCommand.ExecuteSafe();
-		}
-
-		private void CloseDialogClick(object sender, EventArgs e)
-		{
-			ViewModel.CloseDialogCommand.ExecuteSafe();
 		}
 	}
 }

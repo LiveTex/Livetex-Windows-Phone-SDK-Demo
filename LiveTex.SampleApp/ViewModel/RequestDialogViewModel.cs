@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
@@ -17,7 +16,7 @@ namespace LiveTex.SampleApp.ViewModel
 		protected override async Task Initialize(object parameter)
 		{
 			LiveTexID = LiveTexClient.LiveTexID;
-			await WrapRequest(() => Task.WhenAll(RefreshDepartments(), RefreshEmployees(null)));
+			await WrapRequest(RefreshDepartments);
 		}
 
 		private string _userName;
@@ -45,52 +44,16 @@ namespace LiveTex.SampleApp.ViewModel
 		public List<ListItemWrapper<Department>> Departments
 		{
 			get { return _departments; }
-			private set { SetValue(ref _departments, value, () => Department = _departments.First()); }
+			private set { SetValue(ref _departments, value, () => Department = _departments.Count == 2 ? _departments[1] : _departments.First()); }
 		}
 
 		private ListItemWrapper<Department> _department;
 		public ListItemWrapper<Department> Department
 		{
 			get { return _department; }
-			set
-			{
-				SetValue(ref _department, value);
-				IsEmployeeSelectionAllowed = _department?.SourceObject == null;
-			}
+			set { SetValue(ref _department, value); }
 		}
-
-		private bool _isDepartmentSelectionAllowed;
-		public bool IsDepartmentSelectionAllowed
-		{
-			get { return _isDepartmentSelectionAllowed; }
-			private set { SetValue(ref _isDepartmentSelectionAllowed, value); }
-		}
-
-		private List<ListItemWrapper<Employee>> _employees;
-		public List<ListItemWrapper<Employee>> Employees
-		{
-			get { return _employees; }
-			private set { SetValue(ref _employees, value, () => Employee = _employees.First()); }
-		}
-
-		private ListItemWrapper<Employee> _employee;
-		public ListItemWrapper<Employee> Employee
-		{
-			get { return _employee; }
-			set
-			{
-				SetValue(ref _employee, value);
-				IsDepartmentSelectionAllowed = _employee?.SourceObject == null;
-			}
-		}
-
-		private bool _isEmployeeSelectionAllowed;
-		public bool IsEmployeeSelectionAllowed
-		{
-			get { return _isEmployeeSelectionAllowed; }
-			private set { SetValue(ref _isEmployeeSelectionAllowed, value); }
-		}
-
+		
 		#region Commands
 
 		private AsyncCommand _requestDialogCommand;
@@ -129,40 +92,6 @@ namespace LiveTex.SampleApp.ViewModel
 			Departments = result;
 		}
 
-		private async Task RefreshEmployees(string departmentId)
-		{
-			List<Employee> emploees = null;
-
-			try
-			{
-				emploees = string.IsNullOrWhiteSpace(departmentId)
-					? await Client.GetEmployeesAsync("online")
-					: await Client.GetDepartmentEmployeesAsync(departmentId);
-			}
-			catch(AggregateException ex) when (ex.InnerException is ServiceUnavailableException)
-			{
-			}
-			catch (ServiceUnavailableException)
-			{
-			}
-			catch (AggregateException ex)
-			{
-				throw ex.Unwrap();
-			}
-
-			var result = new List<ListItemWrapper<Employee>>
-			{
-				new ListItemWrapper<Employee>(null, "Не выбран")
-			};
-
-			if (emploees != null)
-			{
-				result.AddRange(emploees.Select(e => new ListItemWrapper<Employee>(e, e.Firstname + " " + e.Lastname)));
-			}
-
-			Employees = result;
-		}
-		
 		protected override string GetErrorMessage(Exception ex)
 		{
 			if (string.Equals(ex.Message, "Unable to select chat member.", StringComparison.OrdinalIgnoreCase))
@@ -175,16 +104,25 @@ namespace LiveTex.SampleApp.ViewModel
 
 		private async Task RequestDialog()
 		{
-			var attributes = new DialogAttributes
-			{
-				Hidden = new Dictionary<string, string> { { "platform", "win"} }
-			};
+			var departmentID = Department?.SourceObject?.Id;
 
-			if(string.IsNullOrWhiteSpace(Message))
+			var errors = new List<string>();
+			Action<string, string> validateString = (value, field) => { if (string.IsNullOrWhiteSpace(value)) errors.Add($"Заполните поле '{field}'"); };
+			
+			validateString(UserName, "Имя");
+			validateString(departmentID, "Отдел");
+			validateString(Message, "Сообщение");
+
+			if (errors.Any())
 			{
-				MessageBox.Show("Заполните поле 'Сообщение'", "Ошибка", MessageBoxButton.OK);
+				MessageBox.Show(string.Join(Environment.NewLine, errors), "Ошибка", MessageBoxButton.OK);
 				return;
 			}
+
+			var attributes = new DialogAttributes
+			{
+				Hidden = new Dictionary<string, string> { { "platform", "win" } }
+			};
 
 			if (!string.IsNullOrWhiteSpace(UserName))
 			{
@@ -198,30 +136,12 @@ namespace LiveTex.SampleApp.ViewModel
 				attributes.Visible["Имя пользователя"] = UserName;
 			}
 
-			var departmentID = Department?.SourceObject?.Id;
-			var employeeID = Employee?.SourceObject?.EmployeeId;
-
-			Task task;
-
-			if (employeeID != null)
-			{
-				task = Client.RequestDialogByEmployeeAsync(employeeID, attributes);
-			}
-			else if (departmentID != null)
-			{
-				task = Client.RequestDialogByDepartmentAsync(departmentID, attributes);
-			}
-			else
-			{
-				task = Client.RequestDialogAsync(attributes);
-			}
-
-			if (!await WrapRequest(() => task))
+			if (!await WrapRequest(() => Client.RequestDialogByDepartmentAsync(departmentID, attributes)))
 			{
 				return;
 			}
 
-			LiveTex.LiveTexClient.Message = Message;
+			LiveTexClient.Message = Message;
 
 			App.RootFrame.Navigate(new Uri("/View/DialogPage.xaml", UriKind.Relative));
 		}

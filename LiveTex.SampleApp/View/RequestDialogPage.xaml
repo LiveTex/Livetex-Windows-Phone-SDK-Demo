@@ -18,7 +18,7 @@
 	
 	<phone:PhoneApplicationPage.ApplicationBar>
 		<shell:ApplicationBar BackgroundColor="White" ForegroundColor="Black">
-			<shell:ApplicationBarIconButton IconUri="/Assets/AppBar/check.png" Text="отправить" Click="AppBarSendClick"/>
+			<shell:ApplicationBarIconButton IconUri="/Assets/AppBar/check.png" Text="начать" Click="AppBarSendClick"/>
 		</shell:ApplicationBar>
 	</phone:PhoneApplicationPage.ApplicationBar>
 
@@ -30,7 +30,7 @@
 
 		<StackPanel x:Name="TitlePanel" Grid.Row="0" Margin="12,17,0,28">
 			<TextBlock Text="LIVETEX" Foreground="{StaticResource LiveTexBlueBrush}" Style="{StaticResource PhoneTextNormalStyle}" Margin="12,0"/>
-			<TextBlock Text="начать чат" Foreground="{StaticResource LiveTexBlueBrush}" Margin="9,-7,0,0" Style="{StaticResource PhoneTextTitle1Style}"/>
+			<TextBlock Text="чат" Foreground="{StaticResource LiveTexBlueBrush}" Margin="9,-7,0,0" Style="{StaticResource PhoneTextTitle1Style}"/>
 		</StackPanel>
 
 		<Grid Grid.Row="1" x:Name="ContentPanel" Margin="12,0">
@@ -38,8 +38,6 @@
 				<StackPanel>
 					<TextBlock Text="Имя" Style="{StaticResource LiveTexLabelTextStyle}" />
 					<TextBox Text="{Binding UserName, Mode=TwoWay}" />
-
-					<toolkit:ListPicker Header="Оператор" IsEnabled="{Binding IsEmployeeSelectionAllowed}" ItemsSource="{Binding Employees}" SelectedItem="{Binding Employee, Mode=TwoWay}" />
 
 					<toolkit:ListPicker Header="Отдел" IsEnabled="{Binding IsDepartmentSelectionAllowed}" ItemsSource="{Binding Departments}" SelectedItem="{Binding Department, Mode=TwoWay}" />
 

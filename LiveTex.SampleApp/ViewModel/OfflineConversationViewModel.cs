@@ -73,12 +73,6 @@ namespace LiveTex.SampleApp.ViewModel
 		private DelegateCommand _sendFileCommand;
 		public DelegateCommand SendFileCommand => GetCommand(ref _sendFileCommand, SendFile);
 
-		private DelegateCommand _closeDialogCommand;
-		public DelegateCommand CloseDialogCommand => GetCommand(ref _closeDialogCommand, App.RootFrame.GoBack);
-
-		private DelegateCommand _abuseCommand;
-		public DelegateCommand AbuseCommand => GetCommand(ref _abuseCommand, Abuse, () => IsAbuseAllowed);
-		
 		#endregion
 
 		private IDisposable _eventsSubscription;
@@ -229,22 +223,14 @@ namespace LiveTex.SampleApp.ViewModel
 
 			await WrapRequest(async () =>
 			{
-				var result = await Client.SendOfflineFileAsync(ConversationID, Path.GetFileName(e.OriginalFileName), e.ChosenPhoto);
-				if (result)
+				await Client.SendOfflineFileAsync(ConversationID, Path.GetFileName(e.OriginalFileName), e.ChosenPhoto);
+				await SyncExecute(() =>
 				{
-					await SyncExecute(() =>
-					{
-						messageWrapper.SetMassageID(Guid.NewGuid().ToString());
-						Messages.UpdateMessage(messageWrapper);
-						Messages.MarkAsReceived(messageWrapper.MessageID);
-					});
-				}
+					messageWrapper.SetMassageID(Guid.NewGuid().ToString());
+					Messages.UpdateMessage(messageWrapper);
+					Messages.MarkAsReceived(messageWrapper.MessageID);
+				});
 			});
-		}
-
-		private void Abuse()
-		{
-			App.RootFrame.Navigate(new Uri("/View/AbusePage.xaml", UriKind.Relative));
 		}
 
 		private async Task HandleConversationState(OfflineConversation conversation)
@@ -257,7 +243,7 @@ namespace LiveTex.SampleApp.ViewModel
 			if (conversation.Status == OfflineConversationStatus.Close)
 			{
 				EmployeeAvatar = null;
-				EmployeeName = "Диалог закрыт";
+				EmployeeName = "Обращение закрыто";
 				return;
 			}
 

@@ -18,17 +18,12 @@ namespace LiveTex.SampleApp.ViewModel
 	public class DialogViewModel
 		: ViewModel, ILiveTexEventsHandler
 	{
-		private readonly ChatMessageCollection _messages;
-
 		public DialogViewModel()
 		{
-			_messages = new ChatMessageCollection();
+			Messages = new ChatMessageCollection();
 		}
 
-		public ChatMessageCollection Messages
-		{
-			get { return _messages; }
-		}
+		public ChatMessageCollection Messages { get; }
 
 		#region Model properties
 
@@ -303,7 +298,7 @@ namespace LiveTex.SampleApp.ViewModel
 
 			if(result)
 			{
-				MessageBox.Show("Учтена оценка Хорошо", "оценка диалога", MessageBoxButton.OK);
+				MessageBox.Show("Оценка консультации: хорошо", "оценка консультации", MessageBoxButton.OK);
 			}
 		}
 
@@ -313,7 +308,7 @@ namespace LiveTex.SampleApp.ViewModel
 
 			if (result)
 			{
-				MessageBox.Show("Учтена оценка Плохо", "оценка диалога", MessageBoxButton.OK);
+				MessageBox.Show("Оценка консультации: плохо", "оценка консультации", MessageBoxButton.OK);
 			}
 		}
 

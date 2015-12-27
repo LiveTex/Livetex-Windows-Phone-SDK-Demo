@@ -12,11 +12,6 @@ namespace LiveTex.SampleApp.ViewModel
 	public class NewOfflineConversationViewModel
 		: ViewModel
 	{
-		protected override async Task Initialize(object parameter)
-		{
-			await WrapRequest(RefreshDepartments);
-		}
-
 		private string _userName;
 		public string UserName 
 		{
@@ -45,61 +40,12 @@ namespace LiveTex.SampleApp.ViewModel
 			set { SetValue(ref _message, value); }
 		}
 
-		private List<ListItemWrapper<Department>> _departments;
-		public List<ListItemWrapper<Department>> Departments
-		{
-			get { return _departments; }
-			private set { SetValue(ref _departments, value, () => Department = _departments.FirstOrDefault()); }
-		}
-
-		private ListItemWrapper<Department> _department;
-		public ListItemWrapper<Department> Department
-		{
-			get { return _department; }
-			set { SetValue(ref _department, value); }
-		}
-
 		#region Commands
 
 		private AsyncCommand _createOfflineConversationCommand;
 		public AsyncCommand CreateOfflineConversationCommand => GetAsyncCommand(ref _createOfflineConversationCommand, CreateNewOfflineConversation);
 
 		#endregion
-
-		private async Task RefreshDepartments()
-		{
-			List<Department> departments = null;
-
-			try
-			{
-				departments = await Client.GetDepartmentsAsync("online");
-			}
-			catch (AggregateException ex)
-			{
-				if (!(ex.InnerException is ServiceUnavailableException))
-				{
-					throw ex.InnerException;
-				}
-			}
-			catch (ServiceUnavailableException)
-			{ }
-
-			var result = new List<ListItemWrapper<Department>>
-			{
-				new ListItemWrapper<Department>(null, "Не выбран")
-			};
-
-			if (departments != null)
-			{
-				var newItems = departments
-					.Where(d => !string.Equals(d.Name, "default", StringComparison.OrdinalIgnoreCase))
-					.Select(d => new ListItemWrapper<Department>(d, d.Name));
-
-                result.AddRange(newItems);
-			}
-
-			Departments = result;
-		}
 
 		private async Task CreateNewOfflineConversation()
 		{
@@ -133,21 +79,10 @@ namespace LiveTex.SampleApp.ViewModel
 				contacts.Add(new Contact { Type = ContactType.Phone, Value = UserPhone });
 			}
 
-			var departmentID = Department?.SourceObject?.Id;
-
 			Task<string> task;
 			string conversationID = null;
 
-			if (departmentID != null)
-			{
-				task = Client.CreateOfflineConversationAsync(departmentID, contacts);
-			}
-			else
-			{
-				task = Client.CreateOfflineConversationAsync(contacts);
-			}
-
-			if (!await WrapRequest(async () => conversationID = await task))
+			if (!await WrapRequest(async () => conversationID = await Client.CreateOfflineConversationAsync(contacts)))
 			{
 				return;
 			}

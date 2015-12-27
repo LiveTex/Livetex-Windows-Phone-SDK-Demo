@@ -19,7 +19,7 @@
     shell:SystemTray.BackgroundColor="White">
 	<phone:PhoneApplicationPage.ApplicationBar>
 		<shell:ApplicationBar BackgroundColor="White" ForegroundColor="Black">
-			<shell:ApplicationBarIconButton IconUri="/Assets/AppBar/check.png" Text="отправить" Click="AppBarSendClick"/>
+			<shell:ApplicationBarIconButton IconUri="/Assets/AppBar/check.png" Text="создать" Click="AppBarSendClick"/>
 		</shell:ApplicationBar>
 	</phone:PhoneApplicationPage.ApplicationBar>
 
@@ -31,7 +31,7 @@
 
 		<StackPanel x:Name="TitlePanel" Grid.Row="0" Margin="12,17,0,28">
 			<TextBlock Text="LIVETEX" Foreground="{StaticResource LiveTexBlueBrush}" Style="{StaticResource PhoneTextNormalStyle}" Margin="12,0"/>
-			<TextBlock Text="новое обращение" Foreground="{StaticResource LiveTexBlueBrush}" Margin="9,-7,0,0" Style="{StaticResource PhoneTextTitle1Style}"/>
+			<TextBlock Text="обращение" Foreground="{StaticResource LiveTexBlueBrush}" Margin="9,-7,0,0" Style="{StaticResource PhoneTextTitle1Style}"/>
 		</StackPanel>
 
 		<Grid x:Name="ContentPanel" Grid.Row="1" Margin="12,0,12,0">
@@ -45,8 +45,6 @@
 
 					<TextBlock Text="Email" Style="{StaticResource LiveTexLabelTextStyle}" />
 					<TextBox Text="{Binding UserEmail, Mode=TwoWay}" />
-
-					<toolkit:ListPicker Header="Отдел" ItemsSource="{Binding Departments}" SelectedItem="{Binding Department, Mode=TwoWay}" />
 
 					<TextBlock Text="Сообщение" Style="{StaticResource LiveTexLabelTextStyle}" />
 					<TextBox Text="{Binding Message, Mode=TwoWay}" Height="168" AcceptsReturn="True" TextWrapping="Wrap" />

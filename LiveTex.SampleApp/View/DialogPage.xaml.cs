@@ -89,17 +89,14 @@ namespace LiveTex.SampleApp
 						return null;
 					}
 
-					_abuseMenuItem = ApplicationBar.MenuItems.OfType<ApplicationBarMenuItem>().FirstOrDefault(i => i.Text == "оставить жалобу");
+					_abuseMenuItem = ApplicationBar.MenuItems.OfType<ApplicationBarMenuItem>().FirstOrDefault(i => i.Text == "написать жалобу");
 				}
 
 				return _abuseMenuItem;
 			}
 		}
 
-		private DialogViewModel ViewModel
-		{
-			get { return (DialogViewModel)DataContext; }
-		}
+		private DialogViewModel ViewModel => (DialogViewModel)DataContext;
 
 		protected override void OnNavigatedTo(NavigationEventArgs e)
 		{
