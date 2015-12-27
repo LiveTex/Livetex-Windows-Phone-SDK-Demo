@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
@@ -104,9 +103,16 @@ namespace LiveTex.SampleApp.ViewModel
 
 		private async Task CreateNewOfflineConversation()
 		{
-			if(string.IsNullOrWhiteSpace(Message))
+			var errors = new List<string>();
+			Action<string, string> validateString = (value, field) => { if(string.IsNullOrWhiteSpace(value)) errors.Add($"Заполните поле '{field}'"); };
+
+			validateString(UserName, "Имя");
+			validateString(UserEmail, "Email");
+			validateString(Message, "Сообщение");
+
+			if(errors.Any())
 			{
-				MessageBox.Show("Сообщение не может быть пустым", "Ошибка", MessageBoxButton.OK);
+				MessageBox.Show(string.Join(Environment.NewLine, errors), "Ошибка", MessageBoxButton.OK);
 				return;
 			}
 

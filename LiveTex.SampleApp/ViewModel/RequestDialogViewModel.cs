@@ -4,6 +4,7 @@ using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
+using LiveTex.SampleApp.LiveTex;
 using LiveTex.SampleApp.Wrappers;
 using LiveTex.SDK.Client;
 using LiveTex.SDK.Sample;
@@ -15,6 +16,7 @@ namespace LiveTex.SampleApp.ViewModel
 	{
 		protected override async Task Initialize(object parameter)
 		{
+			LiveTexID = LiveTexClient.LiveTexID;
 			await WrapRequest(() => Task.WhenAll(RefreshDepartments(), RefreshEmployees(null)));
 		}
 
@@ -25,11 +27,11 @@ namespace LiveTex.SampleApp.ViewModel
 			set { SetValue(ref _userName, value); }
 		}
 		
-		private string _userAge;
-		public string UserAge
+		private string _liveTexID;
+		public string LiveTexID
 		{
-			get { return _userAge; }
-			set { SetValue(ref _userAge, value); }
+			get { return _liveTexID; }
+			private set { SetValue(ref _liveTexID, value); }
 		}
 
 		private string _message;
@@ -114,7 +116,7 @@ namespace LiveTex.SampleApp.ViewModel
 			catch (ServiceUnavailableException)
 			{ }
 
-			var result = new List<ListItemWrapper<Department>>()
+			var result = new List<ListItemWrapper<Department>>
 			{
 				new ListItemWrapper<Department>(null, "Не выбран")
 			};
@@ -182,20 +184,6 @@ namespace LiveTex.SampleApp.ViewModel
 			{
 				MessageBox.Show("Заполните поле 'Сообщение'", "Ошибка", MessageBoxButton.OK);
 				return;
-			}
-
-			if (!string.IsNullOrWhiteSpace(UserAge))
-			{
-				int age;
-				if (!int.TryParse(UserAge, out age)
-					|| age < 10
-					|| age > 99)
-				{
-					MessageBox.Show("Возраст должен быть числом от 10 до 99", "Ошибка", MessageBoxButton.OK);
-					return;
-				}
-
-				attributes.Visible = new Dictionary<string, string> { { "Возраст", age.ToString(CultureInfo.InvariantCulture) } };
 			}
 
 			if (!string.IsNullOrWhiteSpace(UserName))

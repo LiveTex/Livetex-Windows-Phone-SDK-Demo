@@ -30,13 +30,11 @@
 
 		<Grid x:Name="ContentPanel" Grid.Row="1" Margin="12,0,12,0">
             <StackPanel>
-				<TextBlock Style="{StaticResource LiveTexLabelTextStyle}" FontWeight="Bold" TextWrapping="Wrap" TextAlignment="Center" Margin="12,48" Opacity="0.65">
-            		<Run Text="Приложение для демонстрации"/>
-            		<LineBreak/>
-            		<Run Text="возможностей LiveTex Mobile SDK"/>
+				<TextBlock Style="{StaticResource LiveTexLabelTextStyle}" FontWeight="Bold" TextWrapping="Wrap" Margin="12" Opacity="0.65">
+            		Приложение для демонстрации возможностей LiveTex Mobile SDK
 				</TextBlock>
 				
-				<Button Content="Чат с оператором" HorizontalContentAlignment="Stretch" Command="{Binding OnlineDialogCommand}" Margin="0,12,0,48">
+				<Button Content="Чат с оператором" HorizontalContentAlignment="Stretch" Command="{Binding OnlineDialogCommand}">
 					<Button.ContentTemplate>
 						<DataTemplate>
 							<StackPanel>

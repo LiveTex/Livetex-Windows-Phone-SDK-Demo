@@ -9,14 +9,14 @@
     xmlns:toolkit="clr-namespace:Microsoft.Phone.Controls;assembly=Microsoft.Phone.Controls.Toolkit"
     xmlns:converters="clr-namespace:LiveTex.SampleApp.Converters"
     xmlns:viewModel="clr-namespace:LiveTex.SampleApp.ViewModel"
+    xmlns:helpers="clr-namespace:LiveTex.SampleApp.Helpers"
     FontFamily="{StaticResource PhoneFontFamilyNormal}"
     FontSize="{StaticResource PhoneFontSizeNormal}"
     Foreground="{StaticResource PhoneForegroundBrush}"
     SupportedOrientations="Portrait" Orientation="Portrait"
     mc:Ignorable="d"
     shell:SystemTray.IsVisible="True"
-    shell:SystemTray.BackgroundColor="White"
-	d:DataContext="{d:DesignInstance viewModel:NewOfflineConversationViewModel}">
+    shell:SystemTray.BackgroundColor="White">
 	<phone:PhoneApplicationPage.ApplicationBar>
 		<shell:ApplicationBar BackgroundColor="White" ForegroundColor="Black">
 			<shell:ApplicationBarIconButton IconUri="/Assets/AppBar/check.png" Text="отправить" Click="AppBarSendClick"/>
@@ -40,28 +40,27 @@
 					<TextBlock Text="Имя" Style="{StaticResource LiveTexLabelTextStyle}" />
 					<TextBox Text="{Binding UserName, Mode=TwoWay}" />
 
-					<TextBlock Text="Email" Style="{StaticResource LiveTexLabelTextStyle}" />
-					<TextBox Text="{Binding UserEmail, Mode=TwoWay}" />
-				
 					<TextBlock Text="Телефон" Style="{StaticResource LiveTexLabelTextStyle}" />
 					<TextBox Text="{Binding UserPhone, Mode=TwoWay}" />
 
-					<TextBlock Text="Выберите отдел" Style="{StaticResource LiveTexLabelTextStyle}" FontFamily="Portable User Interface" />
-					<toolkit:ListPicker ItemsSource="{Binding Departments}" SelectedItem="{Binding Department, Mode=TwoWay}" />
-                    
-					<TextBlock Text="Напишите сообщение" Style="{StaticResource LiveTexLabelTextStyle}" />
+					<TextBlock Text="Email" Style="{StaticResource LiveTexLabelTextStyle}" />
+					<TextBox Text="{Binding UserEmail, Mode=TwoWay}" />
+
+					<toolkit:ListPicker Header="Отдел" ItemsSource="{Binding Departments}" SelectedItem="{Binding Department, Mode=TwoWay}" />
+
+					<TextBlock Text="Сообщение" Style="{StaticResource LiveTexLabelTextStyle}" />
 					<TextBox Text="{Binding Message, Mode=TwoWay}" Height="168" AcceptsReturn="True" TextWrapping="Wrap" />
 				</StackPanel>
 			</ScrollViewer>
 		</Grid>
 
-        <Grid
+		<Grid
 			Grid.Row="0"
 			Grid.RowSpan="2"
 			Visibility="{Binding IsBusy, Converter={StaticResource BoolToVisibilityConverter}}" d:IsHidden="True">
-            <Border Background="White" Opacity="0.75"/>
-            <TextBlock Foreground="Black" Text="Загрузка..." HorizontalAlignment="Center" VerticalAlignment="Center" />
-        </Grid>
-    </Grid>
+			<Border Background="White" Opacity="0.75"/>
+			<TextBlock Foreground="Black" Text="Загрузка..." HorizontalAlignment="Center" VerticalAlignment="Center" />
+		</Grid>
+	</Grid>
 
 </phone:PhoneApplicationPage>

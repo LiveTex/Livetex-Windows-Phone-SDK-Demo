@@ -15,7 +15,7 @@
     mc:Ignorable="d"
     shell:SystemTray.IsVisible="True"
     shell:SystemTray.BackgroundColor="White">
-
+	
 	<phone:PhoneApplicationPage.ApplicationBar>
 		<shell:ApplicationBar BackgroundColor="White" ForegroundColor="Black">
 			<shell:ApplicationBarIconButton IconUri="/Assets/AppBar/check.png" Text="отправить" Click="AppBarSendClick"/>
@@ -39,14 +39,12 @@
 					<TextBlock Text="Имя" Style="{StaticResource LiveTexLabelTextStyle}" />
 					<TextBox Text="{Binding UserName, Mode=TwoWay}" />
 
-					<TextBlock Text="Оператор" Style="{StaticResource LiveTexLabelTextStyle}" FontFamily="Portable User Interface" />
-					<toolkit:ListPicker IsEnabled="{Binding IsEmployeeSelectionAllowed}" ItemsSource="{Binding Employees}" SelectedItem="{Binding Employee, Mode=TwoWay}" FontFamily="Portable User Interface" />
+					<toolkit:ListPicker Header="Оператор" IsEnabled="{Binding IsEmployeeSelectionAllowed}" ItemsSource="{Binding Employees}" SelectedItem="{Binding Employee, Mode=TwoWay}" />
 
-					<TextBlock Text="Отдел" Style="{StaticResource LiveTexLabelTextStyle}" FontFamily="Portable User Interface" />
-					<toolkit:ListPicker IsEnabled="{Binding IsDepartmentSelectionAllowed}" ItemsSource="{Binding Departments}" SelectedItem="{Binding Department, Mode=TwoWay}" FontFamily="Portable User Interface"/>
+					<toolkit:ListPicker Header="Отдел" IsEnabled="{Binding IsDepartmentSelectionAllowed}" ItemsSource="{Binding Departments}" SelectedItem="{Binding Department, Mode=TwoWay}" />
 
-					<TextBlock Text="Возраст" Style="{StaticResource LiveTexLabelTextStyle}" />
-					<TextBox Text="{Binding UserAge, Mode=TwoWay}" />
+					<TextBlock Text="LiveTex ID" Style="{StaticResource LiveTexLabelTextStyle}" />
+					<TextBox Text="{Binding LiveTexID, Mode=OneWay}" IsReadOnly="True" />
 
 					<TextBlock Text="Сообщение" Style="{StaticResource LiveTexLabelTextStyle}" />
 					<TextBox Text="{Binding Message, Mode=TwoWay}" Height="168" AcceptsReturn="True" TextWrapping="Wrap" />

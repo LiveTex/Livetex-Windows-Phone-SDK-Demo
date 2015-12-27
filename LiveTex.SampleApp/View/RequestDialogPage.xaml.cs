@@ -15,10 +15,7 @@ namespace LiveTex.SampleApp
 			DataContext = new RequestDialogViewModel();
 		}
 
-		private RequestDialogViewModel ViewModel
-		{
-			get { return (RequestDialogViewModel)DataContext; }
-		}
+		private RequestDialogViewModel ViewModel => (RequestDialogViewModel)DataContext;
 
 		protected override void OnNavigatedTo(NavigationEventArgs e)
 		{
@@ -41,7 +38,8 @@ namespace LiveTex.SampleApp
 
 		private void AppBarSendClick(object sender, EventArgs e)
 		{
-			ViewModel.RequestDialogCommand.ExecuteSafe();
+			Focus();
+			Dispatcher.BeginInvoke(() => ViewModel.RequestDialogCommand.ExecuteSafe());
 		}
 	}
 }

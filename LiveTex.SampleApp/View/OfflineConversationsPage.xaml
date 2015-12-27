@@ -135,7 +135,14 @@
 				</ListBox.ItemTemplate>
 			</ListBox>
 
-			<Button Content="новое обращение" Command="{Binding NewConversationCommand}" Visibility="{Binding HasConversations, Converter={StaticResource InvertedBoolToVisibilityConverter}}" VerticalAlignment="Top"/>
+			<TextBlock 
+				Style="{StaticResource PhoneTextTitle2Style}"
+				Foreground="Black"
+				Opacity="0.65"
+				VerticalAlignment="Top"
+				
+				Text="У вас нет обращений" 
+				Visibility="{Binding HasConversations, Converter={StaticResource InvertedBoolToVisibilityConverter}}"/>
 		</Grid>
 
 		<Grid Grid.Row="0" Grid.RowSpan="2" Visibility="{Binding IsBusy, Converter={StaticResource BoolToVisibilityConverter}}" d:IsHidden="True">

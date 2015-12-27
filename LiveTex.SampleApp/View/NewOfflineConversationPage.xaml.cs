@@ -38,7 +38,8 @@ namespace LiveTex.SampleApp
 
 		private void AppBarSendClick(object sender, EventArgs e)
 		{
-			ViewModel.CreateOfflineConversationCommand.ExecuteSafe();
+			Focus();
+			Dispatcher.BeginInvoke(() => ViewModel.CreateOfflineConversationCommand.ExecuteSafe());
 		}
 	}
 }
