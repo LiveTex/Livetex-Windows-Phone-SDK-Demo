@@ -274,7 +274,7 @@ namespace LiveTex.SampleApp.ViewModel
 
 			await WrapRequest(async () =>
 			{
-				var result = await Client.SendFileAsync(e.OriginalFileName, e.ChosenPhoto);
+				var result = await Client.SendFileAsync(Path.GetFileName(e.OriginalFileName), e.ChosenPhoto);
 				if(result)
 				{
 					await SyncExecute(() =>
