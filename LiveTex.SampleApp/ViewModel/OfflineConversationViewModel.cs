@@ -98,7 +98,7 @@ namespace LiveTex.SampleApp.ViewModel
 			List<OfflineMessage> messages = null;
 			var result = await WrapRequest(async () =>
 			{
-				messages = await Client.GetOfflineMessages(ConversationID);
+				messages = await Client.GetOfflineMessagesAsync(ConversationID);
 			});
 
 			if (result)
@@ -138,7 +138,7 @@ namespace LiveTex.SampleApp.ViewModel
 
 			await WrapRequest(async () =>
 			{
-				var conversations = await Client.GetOfflineConversations();
+				var conversations = await Client.GetOfflineConversationsAsync();
 				var conversation = conversations?.FirstOrDefault(c => string.Equals(c.ConversationID, ConversationID, StringComparison.Ordinal));
 
 				if(conversation == null)

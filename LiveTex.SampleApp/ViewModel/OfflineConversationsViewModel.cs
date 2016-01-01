@@ -69,7 +69,7 @@ namespace LiveTex.SampleApp.ViewModel
 
 		private async Task RefreshConversationsList()
 		{
-			var conversations = await Client.GetOfflineConversations();
+			var conversations = await Client.GetOfflineConversationsAsync();
 
 			if(conversations == null)
 			{
