@@ -202,8 +202,8 @@
 				<TextBlock Grid.Column="1" Foreground="White" Text="{Binding EmployeeName}" Style="{StaticResource PhoneTextTitle2Style}" Margin="12,0,0,0" VerticalAlignment="Top" />
 			</Grid>
 		</Border>
-		
-        <Grid Grid.Row="1" Background="LightGray">
+
+		<Grid Grid.Row="1" Background="LightGray" Visibility="{Binding IsRateDialogAllowed, Converter={StaticResource BoolToVisibilityConverter}}">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="Auto"/>

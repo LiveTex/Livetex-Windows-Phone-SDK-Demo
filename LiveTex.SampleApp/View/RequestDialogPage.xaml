@@ -39,7 +39,7 @@
 					<TextBlock Text="Имя" Style="{StaticResource LiveTexLabelTextStyle}" />
 					<TextBox Text="{Binding UserName, Mode=TwoWay}" />
 
-					<toolkit:ListPicker Header="Отдел" IsEnabled="{Binding IsDepartmentSelectionAllowed}" ItemsSource="{Binding Departments}" SelectedItem="{Binding Department, Mode=TwoWay}" />
+					<toolkit:ListPicker Header="Отдел" ItemsSource="{Binding Departments}" SelectedItem="{Binding Department, Mode=TwoWay}" />
 
 					<TextBlock Text="LiveTex ID" Style="{StaticResource LiveTexLabelTextStyle}" />
 					<TextBox Text="{Binding LiveTexID, Mode=OneWay}" IsReadOnly="True" />
@@ -50,7 +50,7 @@
 			</ScrollViewer>
 		</Grid>
 
-		<Grid Visibility="{Binding IsBusy, Converter={StaticResource BoolToVisibilityConverter}}" d:IsHidden="True">
+		<Grid Grid.Row="0" Grid.RowSpan="2" Visibility="{Binding IsBusy, Converter={StaticResource BoolToVisibilityConverter}}" d:IsHidden="True">
 			<Border Background="White" Opacity="0.75"/>
 			<TextBlock Foreground="Black" Text="Загрузка..." HorizontalAlignment="Center" VerticalAlignment="Center" />
 		</Grid>

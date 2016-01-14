@@ -2,10 +2,8 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
-using Windows.Storage.Pickers;
 using LiveTex.SampleApp.LiveTex;
 using LiveTex.SampleApp.Wrappers;
 using LiveTex.SDK;
@@ -18,6 +16,8 @@ namespace LiveTex.SampleApp.ViewModel
 	public class DialogViewModel
 		: ViewModel, ILiveTexEventsHandler
 	{
+		private const string cIsRateAllowed = "96D98FFF-A412-4002-8D01-27944A223CD6";
+
 		public DialogViewModel()
 		{
 			Messages = new ChatMessageCollection();
@@ -60,6 +60,13 @@ namespace LiveTex.SampleApp.ViewModel
 		{
 			get { return _isAbuseAllowed; }
 			private set { SetValue(ref _isAbuseAllowed, value); }
+		}
+
+		private bool _isRateDialogAllowed;
+		public bool IsRateDialogAllowed
+		{
+			get { return _isRateDialogAllowed; }
+			set { SetValue(ref _isRateDialogAllowed, value); }
 		}
 
 		#endregion
@@ -164,7 +171,11 @@ namespace LiveTex.SampleApp.ViewModel
 				{
 					await SendMessage(LiveTexClient.Message);
 					LiveTexClient.Message = null;
+
+					Storage.SetValue(cIsRateAllowed, true);
 				}
+
+				IsRateDialogAllowed = Storage.GetValue(cIsRateAllowed, true);
 			});
 
 			await base.OnNavigatedTo();
@@ -298,6 +309,9 @@ namespace LiveTex.SampleApp.ViewModel
 
 			if(result)
 			{
+				Storage.SetValue(cIsRateAllowed, false);
+				IsRateDialogAllowed = false;
+
 				MessageBox.Show("Оценка консультации: хорошо", "оценка консультации", MessageBoxButton.OK);
 			}
 		}
@@ -308,6 +322,9 @@ namespace LiveTex.SampleApp.ViewModel
 
 			if (result)
 			{
+				Storage.SetValue(cIsRateAllowed, false);
+				IsRateDialogAllowed = false;
+
 				MessageBox.Show("Оценка консультации: плохо", "оценка консультации", MessageBoxButton.OK);
 			}
 		}

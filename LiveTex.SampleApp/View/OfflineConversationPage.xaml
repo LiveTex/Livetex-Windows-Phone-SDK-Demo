@@ -175,7 +175,7 @@
 	</phone:PhoneApplicationPage.Resources>
 	<phone:PhoneApplicationPage.ApplicationBar>
 		<shell:ApplicationBar BackgroundColor="White" ForegroundColor="Black">
-			<shell:ApplicationBarIconButton IconUri="/Assets/AppBar/Send.png" Text="создать" Click="SendMessageClick"/>
+			<shell:ApplicationBarIconButton IconUri="/Assets/AppBar/Send.png" Text="отправить" Click="SendMessageClick"/>
 			<shell:ApplicationBarIconButton IconUri="/Assets/AppBar/upload.png" Text="файл" Click="SendFileClick"/>
 		</shell:ApplicationBar>
 	</phone:PhoneApplicationPage.ApplicationBar>
