@@ -114,14 +114,6 @@ namespace LiveTex.SampleApp
 			ViewModel.NavigatedFrom().LogAsyncError();
 		}
 
-		protected override void OnBackKeyPress(CancelEventArgs e)
-		{
-			ViewModel.CloseDialogCommand.Execute(null);
-
-			e.Cancel = true;
-			base.OnBackKeyPress(e);
-		}
-
 		private void MessagesCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
 		{
 			if(e.Action == NotifyCollectionChangedAction.Add)

@@ -12,7 +12,7 @@
       <Capability Name="ID_CAP_PUSH_NOTIFICATION" />
     </Capabilities>
     <Tasks>
-      <DefaultTask Name="_default" NavigationPage="/View/MainPage.xaml" />
+      <DefaultTask Name="_default" NavigationPage="StartPage.xaml" />
     </Tasks>
     <Tokens>
       <PrimaryToken TokenID="LiveTex.SDK.SampleToken" TaskName="_default">

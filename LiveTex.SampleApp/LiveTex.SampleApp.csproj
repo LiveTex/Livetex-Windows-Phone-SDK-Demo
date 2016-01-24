@@ -108,6 +108,7 @@
     <Compile Include="Helpers\Guard.cs" />
     <Compile Include="Helpers\TextBoxHelper.cs" />
     <Compile Include="Helpers\VisualTreeHelperEx.cs" />
+    <Compile Include="LiveTexUriMapper.cs" />
     <Compile Include="LiveTex\AppCredentials.cs" />
     <Compile Include="ViewModel\AbuseViewModel.cs" />
     <Compile Include="ViewModel\Common\AsyncCommand.cs" />

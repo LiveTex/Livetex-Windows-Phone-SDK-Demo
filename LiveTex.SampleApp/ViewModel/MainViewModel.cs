@@ -12,6 +12,11 @@ namespace LiveTex.SampleApp.ViewModel
 
 		protected override Task Initialize(object parameter)
 		{
+			// Очищаем стек навигации, для удалени неактуальной истории работы с приложением
+			while(App.RootFrame.RemoveBackEntry() != null)
+			{
+			}
+
 			Key = AppCredentials.Key;
 			AppID = AppCredentials.ApplicationID;
 			AuthUri = AppCredentials.AuthServerUri;
@@ -69,7 +74,6 @@ namespace LiveTex.SampleApp.ViewModel
 					AppCredentials.Set(Key, AppID, AuthUri);
 
 					var client = await LiveTexClient.GetClient();
-
 					if(client != null)
 					{
 						AppCredentials.Save();

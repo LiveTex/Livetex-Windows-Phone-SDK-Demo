@@ -1,5 +1,8 @@
 ﻿namespace LiveTex.SampleApp
 {
+	/// <summary>
+	/// Задает параметры аккаунта LiveTex, если параметры не будут заданы приложение откроет диалог ввода параметров аккаунта
+	/// </summary>
 	internal static class Config
 	{
 		public const string cKey = "demo";
