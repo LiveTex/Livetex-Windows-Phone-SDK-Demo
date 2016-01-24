@@ -21,10 +21,7 @@ namespace LiveTex.SampleApp.ViewModel
 		public ViewModel()
 		{
 			_syncContext = SynchronizationContext.Current;
-			Client = LiveTexClient.Client;
 		}
-
-		protected ILiveTexClient Client { get; }
 
 		private bool _isInitialized;
 		public async Task NavigatedTo(object parameter = null)
@@ -32,11 +29,20 @@ namespace LiveTex.SampleApp.ViewModel
 			if(!_isInitialized)
 			{
 				_isInitialized = true;
+
+				if(InitializeClient)
+				{
+					await WrapRequest(async () => Client = await LiveTexClient.GetClient());
+				}
+
 				await Initialize(parameter);
 			}
 
 			await OnNavigatedTo();
 		}
+
+		protected ILiveTexClient Client { get; private set; }
+		protected virtual bool InitializeClient => true;
 
 		public async Task NavigatedFrom()
 		{

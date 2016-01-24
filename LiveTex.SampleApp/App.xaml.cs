@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Diagnostics;
-using System.Resources;
 using System.Windows;
 using System.Windows.Markup;
 using System.Windows.Navigation;
+using LiveTex.SampleApp.LiveTex;
 using LiveTex.SampleApp.Resources;
 using Microsoft.Phone.Controls;
 using Microsoft.Phone.Shell;
@@ -104,19 +104,23 @@ namespace LiveTex.SDK.Sample
 		#region Phone application initialization
 
 		// Avoid double-initialization
-		private bool phoneApplicationInitialized = false;
+		private bool _phoneApplicationInitialized = false;
 
 		// Do not add any additional code to this method
 		private void InitializePhoneApplication()
 		{
-			if (phoneApplicationInitialized)
+			if(_phoneApplicationInitialized)
+			{
 				return;
+			}
+
+			AppCredentials.Load();
 
 			// Create the frame but don't set it as RootVisual yet; this allows the splash
 			// screen to remain active until the application is ready to render.
 			RootFrame = new PhoneApplicationFrame();
 			RootFrame.Navigated += CompleteInitializePhoneApplication;
-
+			
 			// Handle navigation failures
 			RootFrame.NavigationFailed += RootFrame_NavigationFailed;
 
@@ -124,15 +128,17 @@ namespace LiveTex.SDK.Sample
 			RootFrame.Navigated += CheckForResetNavigation;
 
 			// Ensure we don't initialize again
-			phoneApplicationInitialized = true;
+			_phoneApplicationInitialized = true;
 		}
 
 		// Do not add any additional code to this method
 		private void CompleteInitializePhoneApplication(object sender, NavigationEventArgs e)
 		{
 			// Set the root visual to allow the application to render
-			if (RootVisual != RootFrame)
+			if(RootVisual != RootFrame)
+			{
 				RootVisual = RootFrame;
+			}
 
 			// Remove this handler since it is no longer needed
 			RootFrame.Navigated -= CompleteInitializePhoneApplication;
@@ -142,8 +148,10 @@ namespace LiveTex.SDK.Sample
 		{
 			// If the app has received a 'reset' navigation, then we need to check
 			// on the next navigation to see if the page stack should be reset
-			if (e.NavigationMode == NavigationMode.Reset)
+			if(e.NavigationMode == NavigationMode.Reset)
+			{
 				RootFrame.Navigated += ClearBackStackAfterReset;
+			}
 		}
 
 		private void ClearBackStackAfterReset(object sender, NavigationEventArgs e)
@@ -152,8 +160,10 @@ namespace LiveTex.SDK.Sample
 			RootFrame.Navigated -= ClearBackStackAfterReset;
 
 			// Only clear the stack for 'new' (forward) and 'refresh' navigations
-			if (e.NavigationMode != NavigationMode.New && e.NavigationMode != NavigationMode.Refresh)
+			if(e.NavigationMode != NavigationMode.New && e.NavigationMode != NavigationMode.Refresh)
+			{
 				return;
+			}
 
 			// For UI consistency, clear the entire page stack
 			while (RootFrame.RemoveBackEntry() != null)

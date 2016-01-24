@@ -33,7 +33,7 @@ namespace LiveTex.SampleApp
 
 		private void InitializeClick(object sender, EventArgs e)
 		{
-			ViewModel.InitializeClientCommand.ExecuteSafe();
+			ViewModel.SetCredentialsCommand.ExecuteSafe();
 		}
 	}
 }

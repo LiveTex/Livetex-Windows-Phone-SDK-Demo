@@ -78,7 +78,6 @@ namespace LiveTex.SampleApp.ViewModel
 				contacts.Add(new Contact { Type = ContactType.Phone, Value = UserPhone });
 			}
 
-			Task<string> task;
 			string conversationID = null;
 
 			if (!await WrapRequest(async () => conversationID = await Client.CreateOfflineConversationAsync(contacts)))

@@ -47,7 +47,8 @@ namespace LiveTex.SampleApp.Wrappers
 			{
 				try
 				{
-					employee = await LiveTexClient.Client.GetEmployeeAsync(conversation.Route.MemberID.ToString());
+					var client = await LiveTexClient.GetClient();
+					employee = await client.GetEmployeeAsync(conversation.Route.MemberID.ToString());
 				}
 				catch(Exception)
 				{

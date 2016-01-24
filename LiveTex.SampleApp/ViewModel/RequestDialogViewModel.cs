@@ -15,7 +15,6 @@ namespace LiveTex.SampleApp.ViewModel
 	{
 		protected override async Task Initialize(object parameter)
 		{
-			LiveTexID = LiveTexClient.LiveTexID;
 			await WrapRequest(RefreshDepartments);
 		}
 
@@ -26,12 +25,7 @@ namespace LiveTex.SampleApp.ViewModel
 			set { SetValue(ref _userName, value); }
 		}
 		
-		private string _liveTexID;
-		public string LiveTexID
-		{
-			get { return _liveTexID; }
-			private set { SetValue(ref _liveTexID, value); }
-		}
+		public string LiveTexID => AppCredentials.ApplicationID;
 
 		private string _message;
 		public string Message
@@ -69,14 +63,9 @@ namespace LiveTex.SampleApp.ViewModel
 			{
 				departments = await Client.GetDepartmentsAsync("online");
 			}
-			catch (AggregateException ex)
-			{
-				if (!(ex.InnerException is ServiceUnavailableException))
-				{
-					throw ex.InnerException;
-				}
-			}
-			catch (ServiceUnavailableException)
+			catch(AggregateException ex) when(ex.Unwrap() is ServiceUnavailableException)
+			{ }
+			catch(ServiceUnavailableException)
 			{ }
 
 			var result = new List<ListItemWrapper<Department>>
